@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('common/head') %>
+<body>
+    <%- include('common/navbar') %>
+    <div class="container">
+        <h1>Generate SAML Request Advanced</h1>
+        <form action="/send_saml_request_advanced" method="post">
+            <fieldset>
+                <legend>SAML Request Details</legend>
+                
+                <!-- SAML Request XML -->
+                <label for="samlRequestXml">SAML Request XML:</label>
+                <div>Please modify the displayed sample as needed.</div>
+                <textarea id="samlRequestXml" name="samlRequestXml" placeholder="Paste your SAML Request XML here"><%= samlRequestXml ? samlRequestXml : `
+<?xml version="1.0"?>
+<AuthnRequest 
+    xmlns="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
+    Version="2.0" ID="_14a55139c6d6a8e89640c9e348e64921b16f684608"
+    IssueInstant="2024-08-16T10:00:42.285Z"
+    Destination="https://idp.example.com/saml2"
+    AssertionConsumerServiceURL="http://sp.example.com/acs"
+    ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+    ForceAuthn="false">
+    <saml:Issuer>sp.example.com</saml:Issuer>
+    <NameIDPolicy Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" AllowCreate="true"/>
+</AuthnRequest>` %></textarea>
+
+                <!-- Submit Button -->
+                <button type="submit">Generate SAML Request</button>
+            </fieldset>
+        </form>
+        
+        <% if (samlRequestEncoded) { %>
+            <form action="/send_saml_request_advanced" method="post">
+                <h2>Encoded SAML Request</h2>
+                <textarea readonly rows="20" id="encodedSamlRequest" name="encodedSamlRequest"><%= samlRequestEncoded %></textarea>
+                <button type="submit">Send SAML Request</button>
+            </form>
+        <% } %>
+    </div>
+</body>
+</html>

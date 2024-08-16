@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('common/head') %>
+<body>
+    <%- include("common/navbar") %>
+    <div class="container">
+        <h1>Generate SAML Request</h1>
+        <form action="/send_saml_request" method="POST">
+            <fieldset>
+                <legend>SAML Request Details</legend>
+                
+                <!-- Issuer (EntityID) -->
+                <label for="issuer">Issuer (EntityID):</label>
+                <input type="text" id="issuer" name="issuer" required>
+                
+                <!-- Destination (IdP SSO URL) -->
+                <label for="destination">Destination (IdP SSO URL):</label>
+                <input type="text" id="destination" name="destination" required>
+                
+                <!-- Assertion Consumer Service URL (optional) -->
+                <label for="assertionConsumerServiceURL">Assertion Consumer Service URL (optional):</label>
+                <input type="text" id="assertionConsumerServiceURL" name="assertionConsumerServiceURL" value="<%= default_acs %>">
+                
+                <!-- NameID Format -->
+                <label for="nameIDFormat">NameID Format:</label>
+                <select id="nameIDFormat" name="nameIDFormat" required>
+                    <option value="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">Email Address</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">Persistent</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">Transient</option>
+                    <option value="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">Unspecified</option>
+                </select>
+                
+                <!-- Auth Context (optional) -->
+                <!-- <label for="authContext">Auth Context (optional):</label>
+                <select id="authContext" name="authContext">
+                    <option value="">--Select Auth Context--</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:ac:classes:InternetProtocol">Internet Protocol</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:ac:classes:Password">Password</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:ac:classes:Kerberos">Kerberos</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:ac:classes:X509">X.509</option>
+                </select> -->
+                
+                <!-- Allow Unencrypted Assertion -->
+                <!-- <label for="allowUnencryptedAssertion">Allow Unencrypted Assertion:</label>
+                <select id="allowUnencryptedAssertion" name="allowUnencryptedAssertion">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select> -->
+                
+                <!-- Force Authn -->
+                <label for="forceAuthn">Force Authn:</label>
+                <select id="forceAuthn" name="forceAuthn">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select>
+                
+                <!-- Binding -->
+                <!-- <label for="binding">Binding:</label>
+                <select id="binding" name="binding">
+                    <option value="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST">HTTP-POST</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect">HTTP-Redirect</option>
+                </select>
+                 -->
+                <!-- Submit Button -->
+                <button type="submit">Send SAML Request</button>
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

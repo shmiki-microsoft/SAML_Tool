@@ -1,0 +1,22 @@
+{
+  "name": "saml-request-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "dotenv -e ../.env node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv-cli": "^7.4.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "saml2-js": "^4.0.2",
+    "xml2js": "^0.6.2",
+    "zlib": "^1.0.5"
+  }
+}

@@ -1,0 +1,40 @@
+// server.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const app = express();
+const port = process.env.PORT || process.env.SERVER_PORT;
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set up EJS
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Routes
+const indexRouter = require('./routes/index');
+const sendSAMLRequestRouter = require('./routes/send_saml_request');
+const acsRouter = require('./routes/acs');
+const samlResponseDecodeRouter = require('./routes/saml_response_decode');
+const samlRequestEncodeRouter = require('./routes/send_saml_request_advanced');
+app.use('/', indexRouter);
+app.use('/', sendSAMLRequestRouter);
+app.use('/', acsRouter);
+app.use('/', samlResponseDecodeRouter);
+app.use('/', samlRequestEncodeRouter);
+app.use((req, res, next) => {
+    res.status(404).render('not_found');
+});
+
+// Exception
+process.on('uncaughtException', function(err) {
+    console.log(err);
+});
+
+// Start app server to listen on set port
+app.listen(port, () => {
+    console.log(`saml2-js Sample app listening on port ${port}`);
+});

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('common/head') %>
+<body>
+    <%- include('common/navbar') %>
+    <div class="container">
+        <h1>Decode SAML Response</h1>
+        <form action="/saml_response_decode" method="post">
+            <fieldset>
+                <legend>SAML Response Details</legend>
+                
+                <!-- SAML Response (Base64 encoded) -->
+                <label for="samlResponse">SAML Response (Base64 encoded):</label>
+                <textarea id="samlResponse" name="samlResponse" rows="10"><% if (samlResponse) { %><%= samlResponse %><% } %></textarea>
+                
+                <!-- Submit Button -->
+                <button type="submit">Decode</button>
+            </fieldset>
+        </form>
+
+        <% if (decodedResponse) { %>
+            <h2>Decoded SAML Response</h2>
+            <textarea readonly rows="20"><%= decodedResponse %></textarea>
+        <% } %>
+    </div>
+</body>
+</html>
