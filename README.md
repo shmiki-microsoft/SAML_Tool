@@ -43,22 +43,28 @@ IDP_CERT_FILE=saml2-js.cer
 
 ### 3. Set Up Keys and Certificates
 
-1. Create a `keys` directory in the root of the project.
+1. Create a `keys` directory in  `app` directory of the project.
 2. Inside the `keys` directory, create two subdirectories: `SP` and `IdP`.
 3. Store the Service Provider (SP) private key and certificate in the `SP` directory.
 4. Store the Identity Provider (IdP) certificate in the `IdP` directory.
 
 To generate the SP private key and certificate using OpenSSL, run the following command:
 
-```bash
+```
 openssl req -x509 -days 3650 -nodes -newkey rsa:4096 -keyout ./keys/SP/key-file.pem -out ./keys/SP/cert-file.crt
 ```
 
 ### 4. Running the Application
 
-For local deployment, navigate to the `app` directory and run the following command:
+For local deployment, navigate to the `app` directory.
+When running the application for the first time, execute following command:
+npm install command.
+```
+npm run dev
+```
 
-```bash
+Run the following command:
+```
 npm run dev
 ```
 
