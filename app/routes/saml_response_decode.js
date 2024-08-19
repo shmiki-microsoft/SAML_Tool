@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const { decodeSamlResponse } = require('../utils/samlUtils');
+const handleError = require('../utils/errorHandler');
 
-function decodeSamlResponse(samlResponse) {
-    return Buffer.from(samlResponse, 'base64').toString('utf8');
+function renderResponse(res, samlResponse = null, decodedResponse = null) {
+    res.render('saml_response_decode', { samlResponse, decodedResponse });
 }
 
 router.get('/saml_response_decode', (req, res) => {
-    res.render('saml_response_decode', { samlResponse: null, decodedResponse: null });
+    renderResponse(res);
 });
 
 router.post('/saml_response_decode', (req, res) => {
@@ -14,10 +16,9 @@ router.post('/saml_response_decode', (req, res) => {
 
     try {
         const decoded = decodeSamlResponse(samlResponse);
-        res.render('saml_response_decode', { samlResponse: samlResponse, decodedResponse: decoded });
+        renderResponse(res, samlResponse, decoded);
     } catch (err) {
-        console.error({ err });
-        res.status(500).render('error', { message: err.message, error: err });
+        handleError(res, err, 'Failed to decode SAML response');
     }
 });
 

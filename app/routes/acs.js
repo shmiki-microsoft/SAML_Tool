@@ -1,34 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const xml2js = require('xml2js');
+const { decodeSamlResponse } = require('../utils/samlUtils');
+const handleError = require('../utils/errorHandler');
 
-function decodeSamlResponse(samlResponse) {
-    return Buffer.from(samlResponse, 'base64').toString('utf8');
-}
-
-function parseXml(xml, callback) {
-    xml2js.parseString(xml, (err, result) => {
-        if (err) {
-            return callback(err, null);
-        }
-        callback(null, result);
+function parseXml(xml) {
+    return new Promise((resolve, reject) => {
+        xml2js.parseString(xml, (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(result);
+        });
     });
 }
 
-router.post('/acs', (req, res) => {
+router.post('/acs', async (req, res) => {
     const { SAMLResponse } = req.body;
     try {
         const decoded = decodeSamlResponse(SAMLResponse);
-        //res.render('saml_response_decode', { samlResponse: SAMLResponse,decodedResponse:decoded});
-        parseXml(decoded, (err, result) => {
-            if (err) {
-                return res.status(500).render('error', { message: err.message, error: err });
-            }
-            res.render('acs', { samlResponse: result, decodedResponse: decoded });
-        });
+        const result = await parseXml(decoded);
+        res.render('acs', { samlResponse: result, decodedResponse: decoded });
     } catch (err) {
-        console.error({ err });
-        res.status(500).render('error', { message: err.message, error: err });
+        handleError(res, err, 'Failed to process SAML response');
     }
 });
 
