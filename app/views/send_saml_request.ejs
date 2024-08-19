@@ -11,23 +11,22 @@
                 
                 <!-- Issuer (EntityID) -->
                 <label for="issuer">Issuer (EntityID):</label>
-                <input type="text" id="issuer" name="issuer" required>
+                <input type="text" id="issuer" name="issuer" value="<% if (issuer) { %><%= issuer %><% } %>"required>
                 
                 <!-- Destination (IdP SSO URL) -->
                 <label for="destination">Destination (IdP SSO URL):</label>
-                <input type="text" id="destination" name="destination" required>
+                <input type="text" id="destination" name="destination" value="<% if (destination) { %><%= destination %><% } %>" required>
                 
                 <!-- Assertion Consumer Service URL (optional) -->
                 <label for="assertionConsumerServiceURL">Assertion Consumer Service URL (optional):</label>
-                <input type="text" id="assertionConsumerServiceURL" name="assertionConsumerServiceURL" value="<%= default_acs %>">
-                
+                <input type="text" id="assertionConsumerServiceURL" name="assertionConsumerServiceURL" value="<% if (assertionConsumerServiceURL) { %><%= assertionConsumerServiceURL %><% } %>">
                 <!-- NameID Format -->
                 <label for="nameIDFormat">NameID Format:</label>
                 <select id="nameIDFormat" name="nameIDFormat" required>
-                    <option value="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">Email Address</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">Persistent</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">Transient</option>
-                    <option value="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">Unspecified</option>
+                    <option value="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" <%= nameIDFormat === 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress' ? 'selected' : '' %>>Email Address</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" <%= nameIDFormat === 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent' ? 'selected' : '' %>>Persistent</option>
+                    <option value="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" <%= nameIDFormat === 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient' ? 'selected' : '' %>>Transient</option>
+                    <option value="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" <%= nameIDFormat === 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified' ? 'selected' : '' %>>Unspecified</option>
                 </select>
                 
                 <!-- Auth Context (optional) -->
@@ -50,8 +49,8 @@
                 <!-- Force Authn -->
                 <label for="forceAuthn">Force Authn:</label>
                 <select id="forceAuthn" name="forceAuthn">
-                    <option value="true">true</option>
-                    <option value="false">false</option>
+                    <option value="true" <%= forceAuthn === 'true' ? 'selected' : '' %>>true</option>
+                    <option value="false" <%= forceAuthn === 'false' ? 'selected' : '' %>>false</option>
                 </select>
                 
                 <!-- Binding -->
@@ -62,9 +61,24 @@
                 </select>
                  -->
                 <!-- Submit Button -->
-                <button type="submit">Send SAML Request</button>
-            </fieldset>
+                 <input type="hidden" id="_isGenerate" name="_isGenerate" value="true"/>
+                <button type="submit">Generate SAML Request</button>
+            </fieldset>      
+
         </form>
+        <% if (samlRequest) { %>
+        <form action="/send_saml_request" method="POST">
+            <h2>Decoded SAML Response</h2>
+            <textarea readonly rows="20"><%= samlRequest %></textarea>
+            <input type="hidden" id="issuer_" name="issuer" value="<% if (issuer) { %><%= issuer %><% } %>"required>
+            <input type="hidden" id="destination_" name="destination" value="<% if (destination) { %><%= destination %><% } %>" required>
+            <input type="hidden" id="assertionConsumerServiceURL_" name="assertionConsumerServiceURL" value="<% if (assertionConsumerServiceURL) { %><%= assertionConsumerServiceURL %><% } %>">
+            <input type="hidden" id="nameIDFormat_" name="nameIDFormat" value="<% if (nameIDFormat) { %><%= nameIDFormat %><% } %>">
+            <input type="hidden" id="forceAuthn_" name="forceAuthn" value="<% if (forceAuthn) { %><%= forceAuthn %><% } %>">
+            <input type="hidden" id="_isGenerate_" name="_isGenerate" value="false"/>
+            <button type="submit">Send SAML Request</button>
+        </form>
+        <% } %>
     </div>
 </body>
 </html>

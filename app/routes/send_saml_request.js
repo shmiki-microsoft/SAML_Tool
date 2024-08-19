@@ -3,6 +3,8 @@ const router = express.Router();
 const saml2 = require('saml2-js');
 const path = require('path');
 const fs = require('fs');
+const querystring = require('querystring');
+const { decodeSamlRequest } = require('../utils/samlUtils');
 
 function getSpOptions(req) {
     return {
@@ -23,7 +25,16 @@ function getIdpOptions(req) {
 }
 
 router.get('/send_saml_request', (req, res) => {
-    res.render('send_saml_request', { default_acs: `${process.env.host}/acs` });
+    res.render('send_saml_request', {
+        issuer:null,
+        destination:null,
+        assertionConsumerServiceURL:`${process.env.host}/acs`,
+        nameIDFormat:null,
+        forceAuthn:null,
+        _isGenerate:null,
+        _isRequest:null,
+        samlRequest: null
+    });
 });
 
 router.post('/send_saml_request', (req, res) => {
@@ -33,12 +44,42 @@ router.post('/send_saml_request', (req, res) => {
     const sp = new saml2.ServiceProvider(spOptions);
     const idp = new saml2.IdentityProvider(idpOptions);
 
-    sp.create_login_request_url(idp, {}, (err, login_url, request_id) => {
+    sp.create_login_request_url(idp, {}, async (err, login_url, request_id) => {
         if (err) {
             console.error({ err });
             return res.status(500).render('error', { message: err.message, error: err });
         }
-        res.redirect(login_url);
+        if(req.body._isGenerate === "true"){
+            // const option = req.body;
+            // const urlParts = new URL(login_url);
+            // const samlRequest = querystring.parse(urlParts.search.slice(1)).SAMLRequest;
+            // option.samlRequest = ecodeSamlRequest(samlRequest)
+            // return res.render('send_saml_request',option)
+            try {
+                const urlParts = new URL(login_url);
+                const samlRequestEncoded = querystring.parse(urlParts.search.slice(1)).SAMLRequest;
+        
+                if (!samlRequestEncoded) {
+                    return res.status(400).render('error', { message: "SAMLRequest parameter is missing in the URL" });
+                }
+        
+                const samlRequest = await decodeSamlRequest(samlRequestEncoded);
+                const option = { ...req.body,samlRequest };
+        
+                return res.render('send_saml_request', option);
+            } catch (err) {
+                console.error(err);
+                return res.status(500).render('error', { message: "Failed to process SAML Request", error: err });
+            }
+            //  decodeSamlRequest(samlRequest, (result) =>{
+            //     option.samlRequest = result
+            //     return res.render('send_saml_request',option)
+            // })
+        }else{
+            return res.redirect(login_url);
+        }
+
+        
     });
 });
 
