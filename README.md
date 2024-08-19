@@ -58,9 +58,8 @@ openssl req -x509 -days 3650 -nodes -newkey rsa:4096 -keyout ./keys/SP/key-file.
 
 For local deployment, navigate to the `app` directory.
 When running the application for the first time, execute following command:
-npm install command.
 ```
-npm run dev
+npm install
 ```
 
 Run the following command:
