@@ -68,8 +68,8 @@
         </form>
         <% if (samlRequest) { %>
         <form action="/send_saml_request" method="POST">
-            <h2>Decoded SAML Response</h2>
-            <textarea readonly rows="20"><%= samlRequest %></textarea>
+            <h2>Generated SAML Response</h2>
+            <textarea readonly rows="20" placeholder="Generated SAML Response"><%= samlRequest %></textarea>
             <input type="hidden" id="issuer_" name="issuer" value="<% if (issuer) { %><%= issuer %><% } %>"required>
             <input type="hidden" id="destination_" name="destination" value="<% if (destination) { %><%= destination %><% } %>" required>
             <input type="hidden" id="assertionConsumerServiceURL_" name="assertionConsumerServiceURL" value="<% if (assertionConsumerServiceURL) { %><%= assertionConsumerServiceURL %><% } %>">
