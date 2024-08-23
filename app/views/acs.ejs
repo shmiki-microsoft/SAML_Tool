@@ -63,10 +63,17 @@
             <p>No SAML response found.</p>
         <% } %>
 
+        <% if (relayState) { %>
+            <h2>RelayState</h2>
+            <p><%= relayState %></p>
+        <% } %>
+        
         <% if (decodedResponse) { %>
             <h2>Decoded SAML Response Raw</h2>
             <textarea id="decodedResponse" readonly rows="20"><%= decodedResponse %></textarea>
         <% } %>
+
+
         <a href="/">Go Back</a>     
     </div>
 </body>

@@ -16,11 +16,11 @@ function parseXml(xml) {
 }
 
 router.post('/acs', async (req, res) => {
-    const { SAMLResponse } = req.body;
+    const { SAMLResponse, RelayState } = req.body;
     try {
         const decoded = decodeSamlResponse(SAMLResponse);
         const result = await parseXml(decoded);
-        res.render('acs', { samlResponse: result, decodedResponse: decoded });
+        res.render('acs', { samlResponse: result, decodedResponse: decoded, relayState: RelayState });
     } catch (err) {
         handleError(res, err, 'Failed to process SAML response');
     }
