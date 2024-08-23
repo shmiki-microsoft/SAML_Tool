@@ -14,6 +14,7 @@ function getEnvironmentVariables() {
         assertionConsumerServiceURL: `${process.env.host}/acs`,
         nameIDFormat: null,
         forceAuthn: null,
+        relayState: null,
         _isGenerate: null,
         _isRequest: null,
         samlRequest: null
@@ -54,23 +55,23 @@ router.post('/send_saml_request', (req, res) => {
     const sp = new saml2.ServiceProvider(spOptions);
     const idp = new saml2.IdentityProvider(idpOptions);
 
-    sp.create_login_request_url(idp, {}, async (err, login_url, request_id) => {
+    sp.create_login_request_url(idp, req.body.relayState ? { relay_state: req.body.relayState } : {}, async (err, login_url, request_id) => {
         if (err) {
             return handleError(res, err, 'Failed to create login request URL');
         }
-
+    
         if (req.body._isGenerate === "true") {
             try {
                 const urlParts = new URL(login_url);
                 const samlRequestEncoded = querystring.parse(urlParts.search.slice(1)).SAMLRequest;
-
+    
                 if (!samlRequestEncoded) {
                     return res.status(400).render('error', { message: "SAMLRequest parameter is missing in the URL" });
                 }
-
+    
                 const samlRequest = await decodeSamlRequest(samlRequestEncoded);
                 const option = { ...req.body, samlRequest };
-
+    
                 return res.render('send_saml_request', option);
             } catch (err) {
                 return handleError(res, err, 'Failed to process SAML Request');

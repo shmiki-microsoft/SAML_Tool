@@ -8,6 +8,7 @@ function getEnvironmentVariables() {
         assertionConsumerServiceURL: `${process.env.host}/acs`,
         nameIDFormat: null,
         forceAuthn: null,
+        relayState: null,
         _isGenerate: null,
         _isRequest: null,
         samlRequest: null
