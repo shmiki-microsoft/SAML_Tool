@@ -25,7 +25,7 @@ function getSpOptions(req) {
         entity_id: req.body.issuer,
         assert_endpoint: req.body.assertionConsumerServiceURL || `${process.env.host}/acs`,
         nameid_format: req.body.nameIDFormat,
-        force_authn: req.body.forcen,
+        force_authn: req.body.forceAuthn,
         private_key: fs.readFileSync(path.join(__dirname, `../keys/SP/${process.env.SP_PRIVATE_KEY_FILE}`)).toString(),
         certificate: fs.readFileSync(path.join(__dirname, `../keys/SP/${process.env.SP_CERT_FILE}`)).toString(),
         allow_unencrypted_assertion: true,
