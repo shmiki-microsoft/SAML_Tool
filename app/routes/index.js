@@ -1,22 +1,9 @@
 const express = require('express');
 const router = express.Router();
-
-function getEnvironmentVariables() {
-    return {
-        issuer: null,
-        destination: null,
-        assertionConsumerServiceURL: null,
-        nameIDFormat: null,
-        forceAuthn: null,
-        relayState: null,
-        _isGenerate: null,
-        _isRequest: null,
-        samlRequest: null
-    };
-}
+const { initializeEnvironmentVariables } = require('../utils/envUtils'); 
 
 function renderResponse(res) {
-    const envVars = getEnvironmentVariables();
+    const envVars = initializeEnvironmentVariables();
     res.render('send_saml_request', envVars);
 }
 

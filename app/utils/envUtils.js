@@ -1,0 +1,15 @@
+function initializeEnvironmentVariables() {
+    return {
+        issuer: null,
+        destination: null,
+        assertionConsumerServiceURL: null,
+        nameIDFormat: null,
+        forceAuthn: null,
+        relayState: null,
+        _isGenerate: null,
+        _isRequest: null,
+        samlRequest: null
+    };
+}
+
+module.exports = { initializeEnvironmentVariables };
