@@ -12,7 +12,7 @@
                 <!-- SAML Request XML -->
                 <label for="samlRequestXml">SAML Request XML:</label>
                 <p>Please modify the displayed sample as needed.</p>
-                <textarea id="samlRequestXml" name="samlRequestXml" placeholder="Paste your SAML Request XML here"><%= samlRequestXml ? samlRequestXml : `
+                <textarea id="samlRequestXml" name="samlRequestXml" placeholder="Paste your SAML Request XML here" required><%= samlRequestXml ? samlRequestXml : `
 <?xml version="1.0"?>
 <AuthnRequest 
     xmlns="urn:oasis:names:tc:SAML:2.0:protocol"

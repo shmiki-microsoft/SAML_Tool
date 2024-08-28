@@ -11,7 +11,7 @@
                 
                 <!-- SAML Response (Base64 encoded) -->
                 <label for="samlResponse">SAML Response (Base64 encoded):</label>
-                <textarea id="samlResponse" name="samlResponse" rows="10"><% if (samlResponse) { %><%= samlResponse %><% } %></textarea>
+                <textarea id="samlResponse" name="samlResponse" rows="10" required><% if (samlResponse) { %><%= samlResponse %><% } %></textarea>
                 
                 <!-- Submit Button -->
                 <button type="submit">Decode</button>

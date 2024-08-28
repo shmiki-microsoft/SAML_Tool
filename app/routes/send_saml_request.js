@@ -6,7 +6,8 @@ const fs = require('fs');
 const querystring = require('querystring');
 const { decodeSamlRequest } = require('../utils/samlUtils');
 const handleError = require('../utils/errorHandler');
-const { initializeEnvironmentVariables } = require('../utils/envUtils'); 
+const { initializeEnvironmentVariables } = require('../utils/envUtils');
+const logger = require('../utils/logger');
 
 function getSpOptions(req) {
     return {
@@ -31,38 +32,47 @@ function renderResponse(res) {
     res.render('send_saml_request', envVars);
 }
 
+async function handleGenerateSamlRequest(req, res, login_url) {
+    try {
+        const urlParts = new URL(login_url);
+        const samlRequestEncoded = querystring.parse(urlParts.search.slice(1)).SAMLRequest;
+
+        if (!samlRequestEncoded) {
+            return handleError(res, new Error('SAMLRequest parameter is missing in the URL'), 400, 'SAMLRequest parameter is missing in the URL');
+        }
+
+        const samlRequest = await decodeSamlRequest(samlRequestEncoded);
+        const option = { ...req.body, samlRequest };
+
+        logger.info('SAML request decoded successfully');
+        logger.debug('Decoded SAML request:', samlRequest);
+        return res.render('send_saml_request', option);
+    } catch (err) {
+        return handleError(res, err, 500, 'Failed to process SAML Request');
+    }
+}
+
 router.get('/send_saml_request', (req, res) => {
+    logger.info('GET /send_saml_request called');
     renderResponse(res);
 });
 
 router.post('/send_saml_request', (req, res) => {
+    logger.info('POST /send_saml_request called');
+    logger.debug('Request body:', req.body);
     const spOptions = getSpOptions(req);
     const idpOptions = getIdpOptions(req);
-
     const sp = new saml2.ServiceProvider(spOptions);
     const idp = new saml2.IdentityProvider(idpOptions);
-
     sp.create_login_request_url(idp, req.body.relayState ? { relay_state: req.body.relayState } : {}, async (err, login_url, request_id) => {
         if (err) {
-            return handleError(res, err, 'Failed to create login request URL');
+            return handleError(res, err, 500, 'Failed to create login request URL');
         }
-    
+
+        logger.info('Login request URL created');
+        logger.debug('URl:', login_url);
         if (req.body._isGenerate === "true") {
-            try {
-                const urlParts = new URL(login_url);
-                const samlRequestEncoded = querystring.parse(urlParts.search.slice(1)).SAMLRequest;
-    
-                if (!samlRequestEncoded) {
-                    return res.status(400).render('error', { message: "SAMLRequest parameter is missing in the URL" });
-                }
-    
-                const samlRequest = await decodeSamlRequest(samlRequestEncoded);
-                const option = { ...req.body, samlRequest };
-    
-                return res.render('send_saml_request', option);
-            } catch (err) {
-                return handleError(res, err, 'Failed to process SAML Request');
-            }
+            return handleGenerateSamlRequest(req, res, login_url);
         } else {
             return res.redirect(login_url);
         }

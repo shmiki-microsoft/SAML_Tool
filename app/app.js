@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 const port = process.env.PORT || process.env.SERVER_PORT;
+const logger = require('./utils/logger'); 
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -35,14 +36,16 @@ app.use('/', samlResponseDecodeRouter);
 app.use('/', samlRequestEncodeRouter);
 app.use((req, res, next) => {
     res.status(404).render('not_found');
+    logger.info('404 Not Found - URL:', req.originalUrl);
 });
 
 // Exception
 process.on('uncaughtException', function(err) {
-    console.log(err);
+    logger.error('Uncaught Exception:', err);
 });
 
 // Start app server to listen on set port
 app.listen(port, () => {
+    logger.info(`saml2-js Sample app listening on port ${port}`);
     console.log(`saml2-js Sample app listening on port ${port}`);
 });
