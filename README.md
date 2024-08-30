@@ -39,6 +39,13 @@ SP_CERT_FILE=cert-file.crt
 
 # Identity Provider (IdP) Configuration
 IDP_CERT_FILE=saml2-js.cer
+
+#Logger Config
+LOG_FILE_PATH=../logs
+LOG_FILE_NAME=application.log
+LOG_LEVEL=all
+MAX_LOG_SIZE=100 #byte
+LOG_ROTATE=5
 ```
 
 ### 3. Set Up Keys and Certificates
