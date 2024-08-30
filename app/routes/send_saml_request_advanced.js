@@ -31,18 +31,14 @@ async function buildSamlRequestSync(samlRequestXml) {
 
 router.get('/send_saml_request_advanced', (req, res) => {
     logger.info('Received GET request on /send_saml_request_advanced');
-    res.render('send_saml_request_advanced', { samlRequestXml: null, samlRequestEncoded: null });
+    res.render('send_saml_request_advanced', { samlRequestXml: null, samlRequestEncodedUrl: null });
 });
 
 router.post('/send_saml_request_advanced', async (req, res) => {
     logger.info('Received POST request on /send_saml_request_advanced');
     logger.debug('Request body:', req.body);
     try {
-        const { samlRequestXml, encodedSamlRequest } = req.body;
-        if (encodedSamlRequest) {
-            logger.info('Redirecting to encoded SAML request URL'); 
-            return res.redirect(encodedSamlRequest);
-        }
+        const { samlRequestXml} = req.body;
         if (!samlRequestXml || samlRequestXml.trim() === '') {
             return handleError(res, new Error('SAML Request XML is required'), 400, 'SAML Request XML is required');
         }
@@ -51,7 +47,7 @@ router.post('/send_saml_request_advanced', async (req, res) => {
         logger.info('Rendering send_saml_request_advanced with encoded SAML request');
         logger.debug('Encoded SAML request URL:', loginUrl);
         res.render('send_saml_request_advanced', {
-            samlRequestEncoded: loginUrl,
+            samlRequestEncodedUrl: loginUrl,
             samlRequestXml: samlRequestXml
         });
     } catch (err) {

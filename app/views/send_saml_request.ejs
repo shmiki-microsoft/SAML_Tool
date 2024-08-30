@@ -72,27 +72,18 @@
                 </select>
                  -->
                 <!-- Submit Button -->
-                <input type="hidden" id="_isGenerate" name="_isGenerate" value="true"/>
                 <button type="submit">Generate SAML Request</button>
             </fieldset>      
 
         </form>      
         <% if (samlRequest) { %>
-        <form action="/send_saml_request" method="POST">
-            <h2>Generated SAML Request</h2>
-            <textarea readonly rows="20" placeholder="Generated SAML Request"><%= samlRequest %></textarea>
-            <h2>RelayState:</h2>
-            <textarea readonly rows="20" placeholder="" id="relayState_" name="relayState"><%= relayState %></textarea>
-            <input type="hidden" id="issuer_" name="issuer" value="<% if (issuer) { %><%= issuer %><% } %>" required>
-            <input type="hidden" id="destination_" name="destination" value="<% if (destination) { %><%= destination %><% } %>" required>
-            <input type="hidden" id="assertionConsumerServiceURL_" name="assertionConsumerServiceURL" value="<% if (assertionConsumerServiceURL) { %><%= assertionConsumerServiceURL %><% } %>">
-            <input type="hidden" id="nameIDFormat_" name="nameIDFormat" value="<% if (nameIDFormat) { %><%= nameIDFormat %><% } %>">
-            <input type="hidden" id="forceAuthn_" name="forceAuthn" value="<% if (forceAuthn) { %><%= forceAuthn %><% } %>">
-            <!-- <input type="hidden" id="relayState_" name="relayState" value="<% if (relayState) { %><%= relayState %><% } %>"> -->
-            <input type="hidden" id="_isGenerate_" name="_isGenerate" value="false"/>
-            <button type="submit">Send SAML Request</button>
-        </form>
+        <h2>Generated SAML Request</h2>
+        <textarea readonly rows="20" placeholder="Generated SAML Request"><%= samlRequest %></textarea>
+        <h2>RelayState:</h2>
+        <textarea readonly rows="20" placeholder="" id="relayState_" name="relayState"><%= relayState %></textarea>
+        <button type="submit" id="sendRequestButton" data-login-url="<%= samlRequestEncodedUrl %>">Send SAML Request</button>
         <% } %>
     </div>
+    <script src="saml_request.js"></script>
 </body>
 </html>

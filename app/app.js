@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const compression = require('compression');
 const logger = require('./utils/logger'); 
+const helmet = require('helmet')
 
 const app = express();
 const port = process.env.PORT || process.env.SERVER_PORT;
@@ -14,20 +15,12 @@ function setupMiddleware(app) {
     app.use(bodyParser.json());
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(compression());
+    app.use(helmet())
 }
 // Set up EJS
 function setupViewEngine(app) {
     app.set('view engine', 'ejs');
     app.set('views', path.join(__dirname, 'views'));
-}
-// Set Headers
-function setupHeaders(app) {
-    app.use((req, res, next) => {
-        res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.setHeader('X-Content-Type-Options', 'nosniff');
-        res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';");
-        next();
-    });
 }
 
 // Routes
@@ -68,7 +61,6 @@ function startServer(app, port) {
 function initApp() {
     setupMiddleware(app);
     setupViewEngine(app);
-    setupHeaders(app);
     setupRoutes(app);
     setupErrorHandling();
     startServer(app, port);

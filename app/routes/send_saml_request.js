@@ -42,7 +42,7 @@ async function handleGenerateSamlRequest(req, res, login_url) {
         }
 
         const samlRequest = await decodeSamlRequest(samlRequestEncoded);
-        const option = { ...req.body, samlRequest };
+        const option = { ...req.body, samlRequest, samlRequestEncodedUrl: login_url};
 
         logger.info('SAML request decoded successfully');
         logger.debug('Decoded SAML request:', samlRequest);
@@ -68,14 +68,9 @@ router.post('/send_saml_request', (req, res) => {
         if (err) {
             return handleError(res, err, 500, 'Failed to create login request URL');
         }
-
         logger.info('Login request URL created');
         logger.debug('URl:', login_url);
-        if (req.body._isGenerate === "true") {
-            return handleGenerateSamlRequest(req, res, login_url);
-        } else {
-            return res.redirect(login_url);
-        }
+        return handleGenerateSamlRequest(req, res, login_url);
     });
 });
 

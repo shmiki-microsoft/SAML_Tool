@@ -8,7 +8,8 @@ function initializeEnvironmentVariables() {
         relayState: null,
         _isGenerate: null,
         _isRequest: null,
-        samlRequest: null
+        samlRequest: null,
+        samlRequestEncodedUrl: null,
     };
 }
 
