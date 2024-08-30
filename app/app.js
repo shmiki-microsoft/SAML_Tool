@@ -59,8 +59,8 @@ function setupErrorHandling() {
 // Start app server to listen on set port
 function startServer(app, port) {
     app.listen(port, () => {
-        logger.info(`saml2-js Sample app listening on port ${port}`);
-        console.log(`saml2-js Sample app listening on port ${port}`);
+        logger.info(`SAML_Request_Builder listening on port ${port}`);
+        console.log(`SAML_Request_Builder listening on port ${port}`);
     });
 }
 
