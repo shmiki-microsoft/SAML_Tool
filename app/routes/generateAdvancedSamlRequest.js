@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const xml2js = require('xml2js');
-const zlib = require('zlib');
 const { parseXmlStringSync, encodeSamlRequest } = require('../utils/samlUtils');
 const handleError = require('../utils/errorHandler'); 
 const logger = require('../utils/logger');
@@ -31,24 +29,28 @@ async function buildSamlRequestSync(samlRequestXml) {
 
 router.get('/generateAdvancedSamlRequest', (req, res) => {
     logger.info('Received GET request on /generateAdvancedSamlRequest');
-    res.render('generateAdvancedSamlRequest', { samlRequestXml: null, samlRequestEncodedUrl: null });
+    res.render('generateAdvancedSamlRequest', { samlRequestXml: null, relayState: null, samlRequestEncodedUrl: null });
 });
 
 router.post('/generateAdvancedSamlRequest', async (req, res) => {
     logger.info('Received POST request on /generateAdvancedSamlRequest');
     logger.debug('Request body:', req.body);
     try {
-        const { samlRequestXml} = req.body;
+        const { samlRequestXml, relayState } = req.body;
         if (!samlRequestXml || samlRequestXml.trim() === '') {
             return handleError(res, new Error('SAML Request XML is required'), 400, 'SAML Request XML is required');
         }
 
-        const loginUrl = await buildSamlRequestSync(samlRequestXml);
+        let loginUrl = await buildSamlRequestSync(samlRequestXml);
+        if (relayState && relayState.trim() !== '') {
+            loginUrl += `&RelayState=${encodeURIComponent(relayState)}`;
+        }
         logger.info('Rendering generateAdvancedSamlRequest with encoded SAML request');
         logger.debug('Encoded SAML request URL:', loginUrl);
         res.render('generateAdvancedSamlRequest', {
             samlRequestEncodedUrl: loginUrl,
-            samlRequestXml: samlRequestXml
+            samlRequestXml: samlRequestXml,
+            relayState: relayState
         });
     } catch (err) {
         handleError(res, err, 500, 'Failed to process SAML request');

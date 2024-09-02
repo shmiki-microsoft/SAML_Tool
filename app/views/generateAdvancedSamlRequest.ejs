@@ -27,6 +27,10 @@
     <NameIDPolicy Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" AllowCreate="true"/>
 </AuthnRequest>` %></textarea>
 
+                <!-- RelayState -->
+                <label for="relayState">RelayState:</label>
+                <input type="text" id="relayState" name="relayState" placeholder="Enter RelayState" value="<%= relayState ? relayState : '' %>">
+
                 <!-- Submit Button -->
                 <button type="submit">Generate SAML Request</button>
             </fieldset>
@@ -38,7 +42,6 @@
             <button type="submit" id="sendRequestButton" data-login-url="<%= samlRequestEncodedUrl %>">Send SAML Request</button>
             <script src="SendSamlRequest.js"></script>
         <% } %>
-
     </div>
 </body>
 </html>
