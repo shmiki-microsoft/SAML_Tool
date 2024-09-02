@@ -26,10 +26,10 @@ function setupViewEngine(app) {
 // Routes
 function setupRoutes(app) {
     const indexRouter = require('./routes/index');
-    const sendSAMLRequestRouter = require('./routes/send_saml_request');
+    const sendSAMLRequestRouter = require('./routes/generateSamlRequest');
     const acsRouter = require('./routes/acs');
-    const samlResponseDecodeRouter = require('./routes/saml_response_decode');
-    const samlRequestEncodeRouter = require('./routes/send_saml_request_advanced');
+    const samlResponseDecodeRouter = require('./routes/decodeSamlResponse');
+    const samlRequestEncodeRouter = require('./routes/generateAdvancedSamlRequest');
     
     app.use('/', indexRouter);
     app.use('/', sendSAMLRequestRouter);
@@ -38,7 +38,7 @@ function setupRoutes(app) {
     app.use('/', samlRequestEncodeRouter);
     
     app.use((req, res, next) => {
-        res.status(404).render('not_found');
+        res.status(404).render('notFound');
         logger.info('404 Not Found - URL:', req.originalUrl);
     });
 }

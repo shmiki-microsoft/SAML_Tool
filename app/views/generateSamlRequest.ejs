@@ -5,7 +5,7 @@
     <%- include("common/navbar") %>
     <div class="container">
         <h1>Generate SAML Request</h1>
-        <form action="/send_saml_request" method="POST">
+        <form action="/generateSamlRequest" method="POST">
             <fieldset>
                 <legend>SAML Request Details</legend>
                 
@@ -84,6 +84,6 @@
         <button type="submit" id="sendRequestButton" data-login-url="<%= samlRequestEncodedUrl %>">Send SAML Request</button>
         <% } %>
     </div>
-    <script src="saml_request.js"></script>
+    <script src="SendSamlRequest.js"></script>
 </body>
 </html>

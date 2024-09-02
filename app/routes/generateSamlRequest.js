@@ -29,7 +29,7 @@ function getIdpOptions(req) {
 
 function renderResponse(res) {
     const envVars = initializeEnvironmentVariables();
-    res.render('send_saml_request', envVars);
+    res.render('generateSamlRequest', envVars);
 }
 
 async function handleGenerateSamlRequest(req, res, login_url) {
@@ -46,19 +46,19 @@ async function handleGenerateSamlRequest(req, res, login_url) {
 
         logger.info('SAML request decoded successfully');
         logger.debug('Decoded SAML request:', samlRequest);
-        return res.render('send_saml_request', option);
+        return res.render('generateSamlRequest', option);
     } catch (err) {
         return handleError(res, err, 500, 'Failed to process SAML Request');
     }
 }
 
-router.get('/send_saml_request', (req, res) => {
-    logger.info('GET /send_saml_request called');
+router.get('/generateSamlRequest', (req, res) => {
+    logger.info('GET /generateSamlRequest called');
     renderResponse(res);
 });
 
-router.post('/send_saml_request', (req, res) => {
-    logger.info('POST /send_saml_request called');
+router.post('/generateSamlRequest', (req, res) => {
+    logger.info('POST /generateSamlRequest called');
     logger.debug('Request body:', req.body);
     const spOptions = getSpOptions(req);
     const idpOptions = getIdpOptions(req);

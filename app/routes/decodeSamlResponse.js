@@ -5,17 +5,17 @@ const logger = require('../utils/logger');
 const handleError = require('../utils/errorHandler');
 
 function renderResponse(res, samlResponse = null, decodedResponse = null) {
-    res.render('saml_response_decode', { samlResponse, decodedResponse });
+    res.render('decodeSamlResponse', { samlResponse, decodedResponse });
 }
 
-router.get('/saml_response_decode', (req, res) => {
-    logger.info('Received GET request on /saml_response_decode');
+router.get('/decodeSamlResponse', (req, res) => {
+    logger.info('Received GET request on /decodeSamlResponse');
     renderResponse(res);
 });
 
-router.post('/saml_response_decode', (req, res) => {
+router.post('/decodeSamlResponse', (req, res) => {
     const { samlResponse } = req.body;
-    logger.info('Received POST request on /saml_response_decode');
+    logger.info('Received POST request on /decodeSamlResponse');
     logger.debug('Request body:', req.body);
     try {
         const decoded = decodeSamlResponse(samlResponse);
