@@ -7,7 +7,7 @@ const logger = require('./utils/logger');
 const helmet = require('helmet')
 
 const app = express();
-const port = process.env.PORT || process.env.SERVER_PORT;
+const port = process.env.PORT || process.env.SERVER_PORT || 3000;
 
 // Middleware
 function setupMiddleware(app) {
