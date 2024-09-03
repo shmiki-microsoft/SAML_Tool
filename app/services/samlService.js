@@ -15,7 +15,7 @@ async function handleError(operation, error) {
 async function processString(string, operation) {
     try {
         const processed = await operation(string);
-        return processed.toString('utf8');
+        return processed
     } catch (err) {
         await handleError('process string', err);
     }
