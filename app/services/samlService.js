@@ -7,22 +7,26 @@ const {removeEscapeCharacters, parseXmlString} = require('../utils/xmlUtils');
 const inflateRawAsync = promisify(zlib.inflateRaw);
 const deflateRawAsync = promisify(zlib.deflateRaw);
 
-async function decompressString(compressedString) {
+async function handleError(operation, error) {
+    const errorMessage = `Failed to ${operation}: ${error.message || error}`;
+    throw new Error(errorMessage);
+}
+
+async function processString(string, operation) {
     try {
-        const decoded = await inflateRawAsync(compressedString);
-        return decoded.toString('utf8');
+        const processed = await operation(string);
+        return processed.toString('utf8');
     } catch (err) {
-        throw new Error('Failed to decompress string');
+        await handleError('process string', err);
     }
 }
 
+async function decompressString(compressedString) {
+    return processString(compressedString, inflateRawAsync);
+}
+
 async function compressString(string) {
-    try {
-        const compressed = await deflateRawAsync(string);
-        return compressed.toString('base64');
-    } catch (err) {
-        throw new Error('Failed to compress string');
-    }
+    return processString(string, deflateRawAsync);
 }
 
 async function decodeSamlRequest(samlRequestEncoded) {
@@ -31,32 +35,34 @@ async function decodeSamlRequest(samlRequestEncoded) {
         const decoded = await decompressString(buffer);
         return removeEscapeCharacters(decoded);
     } catch (err) {
-        throw new Error('Failed to decode SAML request');
+        await handleError('decode SAML request', err);
     }
 }
 
 function decodeSamlResponse(samlResponse) {
     try {
-        let decodedResponse = base64Decode(samlResponse);
+        const decodedResponse = base64Decode(samlResponse);
         return removeEscapeCharacters(decodedResponse);
     } catch (err) {
-        throw new Error('Failed to decode SAML response');
+        handleError('decode SAML response', err);
     }
 }
 
 async function encodeSamlRequest(samlRequestXml) {
     try {
-        return await compressString(samlRequestXml);
+        const compressed = await compressString(samlRequestXml);
+        return Buffer.from(compressed, 'utf8').toString('base64');
     } catch (err) {
-        throw new Error('Failed to encode SAML request');
+        await handleError('encode SAML request', err);
     }
 }
 
-async function buildSamlRequestSync(samlRequestXml,relayState) {
+async function buildSamlRequest(samlRequestXml, relayState) {
     try {
         logger.info('Parsing SAML request XML');
         const result = await parseXmlString(samlRequestXml);
         const authnRequest = result.AuthnRequest || result['samlp:AuthnRequest'];
+
         if (!authnRequest) {
             throw new Error('AuthnRequest element not found in SAML request');
         }
@@ -65,6 +71,7 @@ async function buildSamlRequestSync(samlRequestXml,relayState) {
         if (!destination) {
             throw new Error('Destination attribute not found in AuthnRequest');
         }
+
         logger.info('Encoding SAML request');
         const encoded = await encodeSamlRequest(samlRequestXml);
 
@@ -72,12 +79,13 @@ async function buildSamlRequestSync(samlRequestXml,relayState) {
         if (relayState && relayState.trim() !== '') {
             loginUrl += `&RelayState=${encodeURIComponent(relayState)}`;
         }
+
         logger.info('SAML request built successfully');
         logger.debug('Encoded SAML request:', encoded);
 
         return loginUrl;
     } catch (err) {
-        throw new Error(`Failed to build SAML request: ${err.message}`);
+        await handleError('build SAML request', err);
     }
 }
 
@@ -85,5 +93,5 @@ module.exports = {
     decodeSamlRequest,
     decodeSamlResponse,
     encodeSamlRequest,
-    buildSamlRequestSync
+    buildSamlRequest,
 };

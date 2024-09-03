@@ -3,15 +3,11 @@ const router = express.Router();
 const { initializeEnvironmentVariables } = require('../utils/envUtils'); 
 const logger = require('../utils/logger');
 
-function renderResponse(res) {
+router.get('/', (req, res) => {
+    logger.info('Received GET request on /');
     const envVars = initializeEnvironmentVariables();
     logger.debug('Environment variables:', envVars);
     res.render('generateSamlRequest', envVars);
-}
-
-router.get('/', (req, res) => {
-    logger.info('Received GET request on /');
-    renderResponse(res);
 });
 
 module.exports = router;

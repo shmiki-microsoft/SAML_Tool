@@ -1,0 +1,14 @@
+<% attributes.forEach(function(attr) { %>
+    <li>
+        <strong><%= attr.$.Name %>:</strong>
+        <% if (Array.isArray(attr.AttributeValue)) { %>
+            <ul>
+                <% attr.AttributeValue.forEach(function(value) { %>
+                    <li><%= value %></li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <%= attr.AttributeValue %>
+        <% } %>
+    </li>
+<% }); %>

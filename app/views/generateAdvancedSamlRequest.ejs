@@ -9,10 +9,13 @@
             <fieldset>
                 <legend>SAML Request Details</legend>
                 
-                <!-- SAML Request XML -->
-                <label for="samlRequestXml">SAML Request XML:</label>
-                <p>Please modify the displayed sample as needed.</p>
-                <textarea id="samlRequestXml" name="samlRequestXml" placeholder="Paste your SAML Request XML here" required><%= samlRequestXml ? samlRequestXml : `
+                <%- include('form/textarea', {
+                    id: "samlRequestXml",
+                    label: "SAML Request XML:",
+                    description: "Please modify the displayed sample as needed.",
+                    placeholder: "Paste your SAML Request XML here",
+                    required: true,
+                    value: samlRequestXml ? samlRequestXml : `
 <?xml version="1.0"?>
 <AuthnRequest 
     xmlns="urn:oasis:names:tc:SAML:2.0:protocol"
@@ -25,11 +28,18 @@
     ForceAuthn="false">
     <saml:Issuer>sp.example.com</saml:Issuer>
     <NameIDPolicy Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" AllowCreate="true"/>
-</AuthnRequest>` %></textarea>
+</AuthnRequest>`
+                }) %>
 
-                <!-- RelayState -->
-                <label for="relayState">RelayState:</label>
-                <input type="text" id="relayState" name="relayState" placeholder="Enter RelayState" value="<%= relayState ? relayState : '' %>">
+                <%- include('form/input', {
+                    id: "relayState",
+                    label: "RelayState:",
+                    type: "text",
+                    placeholder: "Enter RelayState",
+                    value: relayState ? relayState : '',
+                    required: false,
+                    smallText: "Optional: Provide a RelayState if needed."
+                }) %>
 
                 <!-- Submit Button -->
                 <button type="submit">Generate SAML Request</button>

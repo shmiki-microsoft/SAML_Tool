@@ -9,56 +9,28 @@
         <% if (samlResponse) { %>
             <h2>Response Details</h2>
             <ul>
-                <li><strong>ID:</strong> <%= samlResponse['samlp:Response'].$.ID %></li>
-                <li><strong>Version:</strong> <%= samlResponse['samlp:Response'].$.Version %></li>
-                <li><strong>IssueInstant:</strong> <%= samlResponse['samlp:Response'].$.IssueInstant %></li>
-                <li><strong>Destination:</strong> <%= samlResponse['samlp:Response'].$.Destination %></li>
-                <li><strong>InResponseTo:</strong> <%= samlResponse['samlp:Response'].$.InResponseTo %></li>
-                <li><strong>Issuer:</strong> <%= samlResponse['samlp:Response'].Issuer[0]._ %></li>
+                <%- include('samlResponse/responseDetails', { response: samlResponse['samlp:Response'] }) %>
             </ul>
             
             <h2>Status</h2>
             <ul>
-                <li><strong>Status Code:</strong> <%= samlResponse['samlp:Response']['samlp:Status'][0]['samlp:StatusCode'][0].$.Value %></li>
+                <%- include('samlResponse/status', { status: samlResponse['samlp:Response']['samlp:Status'][0] }) %>
             </ul>
             
             <h2>Assertion</h2>
             <ul>
-                <% const assertion = samlResponse['samlp:Response'].Assertion[0]; %>
-                <li><strong>ID:</strong> <%= assertion.$.ID %></li>
-                <li><strong>IssueInstant:</strong> <%= assertion.$.IssueInstant %></li>
-                <li><strong>Issuer:</strong> <%= assertion.Issuer[0] %></li>
-                <li><strong>Subject:</strong> <%= assertion.Subject[0].NameID[0]._ %></li>
-                <li><strong>NotBefore:</strong> <%= assertion.Conditions[0].$.NotBefore %></li>
-                <li><strong>NotOnOrAfter:</strong> <%= assertion.Conditions[0].$.NotOnOrAfter %></li>
-                <li><strong>Audience:</strong> <%= assertion.Conditions[0].AudienceRestriction[0].Audience[0] %></li>
+                <%- include('samlResponse/assertion', { assertion: samlResponse['samlp:Response'].Assertion[0] }) %>
             </ul>
             
             <h2>Attributes</h2>
             <ul>
-                <% assertion.AttributeStatement[0].Attribute.forEach(function(attr) { %>
-                    <li>
-                        <strong><%= attr.$.Name %>:</strong>
-                        <% if (Array.isArray(attr.AttributeValue)) { %>
-                            <ul>
-                                <% attr.AttributeValue.forEach(function(value) { %>
-                                    <li><%= value %></li>
-                                <% }); %>
-                            </ul>
-                        <% } else { %>
-                            <%= attr.AttributeValue %>
-                        <% } %>
-                    </li>
-                <% }); %>
+                <%- include('samlResponse/attributes', { attributes: samlResponse['samlp:Response'].Assertion[0].AttributeStatement[0].Attribute }) %>
             </ul>
             
             <h2>Authentication Context</h2>
             <ul>
-                <li><strong>AuthnInstant:</strong> <%= assertion.AuthnStatement[0].$.AuthnInstant %></li>
-                <li><strong>SessionIndex:</strong> <%= assertion.AuthnStatement[0].$.SessionIndex %></li>
-                <li><strong>AuthnContextClassRef:</strong> <%= assertion.AuthnStatement[0].AuthnContext[0].AuthnContextClassRef[0] %></li>
+                <%- include('samlResponse/authnContext', { authnStatement: samlResponse['samlp:Response'].Assertion[0].AuthnStatement[0] }) %>
             </ul>
-
         <% } else { %>
             <p>No SAML response found.</p>
         <% } %>
@@ -72,7 +44,6 @@
             <h2>Decoded SAML Response Raw</h2>
             <textarea id="decodedResponse" readonly rows="20"><%= decodedResponse %></textarea>
         <% } %>
-
 
         <a href="/">Go Back</a>     
     </div>

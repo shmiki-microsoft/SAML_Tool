@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { buildSamlRequestSync } = require('../services/samlService');
+const { buildSamlRequest } = require('../services/samlService');
 const handleError = require('../utils/errorHandler'); 
 const logger = require('../utils/logger');
 
@@ -18,7 +18,7 @@ router.post('/generateAdvancedSamlRequest', async (req, res) => {
             return handleError(res, new Error('SAML Request XML is required'), 400, 'SAML Request XML is required');
         }
 
-        let loginUrl = await buildSamlRequestSync(samlRequestXml,relayState);
+        let loginUrl = await buildSamlRequest(samlRequestXml,relayState);
         res.render('generateAdvancedSamlRequest', {
             samlRequestEncodedUrl: loginUrl,
             samlRequestXml: samlRequestXml,

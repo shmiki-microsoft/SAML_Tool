@@ -1,0 +1,7 @@
+<label for="<%= id %>"><%= label %></label>
+<select id="<%= id %>" name="<%= id %>" <%= typeof required !== 'undefined' && required ? 'required' : '' %>>
+    <% options.forEach(option => { %>
+        <option value="<%= option.value %>" <%= option.value === selectedValue ? 'selected' : '' %>><%= option.text %></option>
+    <% }) %>
+</select>
+<small><%= smallText %></small>

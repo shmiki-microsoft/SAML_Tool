@@ -8,11 +8,14 @@
         <form action="/decodeSamlResponse" method="post">
             <fieldset>
                 <legend>SAML Response Details</legend>
-                
-                <!-- SAML Response (Base64 encoded) -->
-                <label for="samlResponse">SAML Response (Base64 encoded):</label>
-                <textarea id="samlResponse" name="samlResponse" rows="10" required><% if (samlResponse) { %><%= samlResponse %><% } %></textarea>
-                
+                <%- include('form/textarea', {
+                    id: "samlResponse",
+                    label: "SAML Response (Base64 encoded):",
+                    description: "Please input the Base64 encoded SAML Response.",
+                    placeholder: "Please input the Base64 encoded SAML Response.",
+                    required: true,
+                    value: samlResponse ? samlResponse : ''
+                }) %>
                 <!-- Submit Button -->
                 <button type="submit">Decode</button>
             </fieldset>

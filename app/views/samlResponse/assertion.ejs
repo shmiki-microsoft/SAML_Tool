@@ -1,0 +1,7 @@
+<li><strong>ID:</strong> <%= assertion.$.ID %></li>
+<li><strong>IssueInstant:</strong> <%= assertion.$.IssueInstant %></li>
+<li><strong>Issuer:</strong> <%= assertion.Issuer[0] %></li>
+<li><strong>Subject:</strong> <%= assertion.Subject[0].NameID[0]._ %></li>
+<li><strong>NotBefore:</strong> <%= assertion.Conditions[0].$.NotBefore %></li>
+<li><strong>NotOnOrAfter:</strong> <%= assertion.Conditions[0].$.NotOnOrAfter %></li>
+<li><strong>Audience:</strong> <%= assertion.Conditions[0].AudienceRestriction[0].Audience[0] %></li>

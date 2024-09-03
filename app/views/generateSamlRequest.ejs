@@ -9,31 +9,72 @@
             <fieldset>
                 <legend>SAML Request Details</legend>
                 
-                <!-- Issuer (EntityID) -->
-                <label for="issuer">Issuer (EntityID):</label>
-                <input type="text" id="issuer" name="issuer" placeholder="Enter the Issuer (EntityID)" value="<% if (issuer) { %><%= issuer %><% } %>" required>
-                <small>Example: sp.example.com</small>
-                
-                <!-- Destination (IdP SSO URL) -->
-                <label for="destination">Destination (IdP SSO URL):</label>
-                <input type="text" id="destination" name="destination" placeholder="Enter the IdP SSO URL" value="<% if (destination) { %><%= destination %><% } %>" required>
-                <small>Example: https://idp.example.com/sso</small>
-                
-                <!-- Assertion Consumer Service URL (optional) -->
-                <label for="assertionConsumerServiceURL">Assertion Consumer Service URL (optional):</label>
-                <input type="text" id="assertionConsumerServiceURL" name="assertionConsumerServiceURL" placeholder="Enter the Assertion Consumer Service URL" value="<% if (assertionConsumerServiceURL) { %><%= assertionConsumerServiceURL %><% } %>">
-                <small>Example: http://sp.example.com/acs</small>
-                
-                <!-- NameID Format -->
-                <label for="nameIDFormat">NameID Format:</label>
-                <select id="nameIDFormat" name="nameIDFormat" required>
-                    <option value="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" <%= nameIDFormat === 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress' ? 'selected' : '' %>>Email Address</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" <%= nameIDFormat === 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent' ? 'selected' : '' %>>Persistent</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" <%= nameIDFormat === 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient' ? 'selected' : '' %>>Transient</option>
-                    <option value="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" <%= nameIDFormat === 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified' ? 'selected' : '' %>>Unspecified</option>
-                </select>
-                <small>Select the NameID Format</small>
- 
+                <%- include('form/input', { 
+                    id: "issuer", 
+                    label: "Issuer (EntityID):", 
+                    type: "text", 
+                    placeholder: "Enter the Issuer (EntityID)", 
+                    value: issuer, 
+                    required: true, 
+                    smallText: "Example: sp.example.com" 
+                }) %>
+
+                <%- include('form/input', { 
+                    id: "destination", 
+                    label: "Destination (IdP SSO URL):", 
+                    type: "text", 
+                    placeholder: "Enter the IdP SSO URL", 
+                    value: destination, 
+                    required: true, 
+                    smallText: "Example: https://idp.example.com/sso" 
+                }) %>
+
+                <%- include('form/input', { 
+                    id: "assertionConsumerServiceURL", 
+                    label: "Assertion Consumer Service URL (optional):", 
+                    type: "text", 
+                    placeholder: "Enter the Assertion Consumer Service URL", 
+                    value: assertionConsumerServiceURL, 
+                    required: false,
+                    smallText: "Example: http://sp.example.com/acs" 
+                }) %>
+
+                <%- include('form/select', { 
+                    id: "nameIDFormat", 
+                    label: "NameID Format:", 
+                    options: [
+                        { value: "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress", text: "Email Address" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent", text: "Persistent" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:nameid-format:transient", text: "Transient" },
+                        { value: "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified", text: "Unspecified" }
+                    ],
+                    selectedValue: nameIDFormat,
+                    required: true,
+                    smallText: "Select the NameID Format"
+                }) %>
+
+                <%- include('form/select', { 
+                    id: "forceAuthn", 
+                    label: "Force Authn:", 
+                    options: [
+                        { value: "true", text: "true" },
+                        { value: "false", text: "false" }
+                    ],
+                    selectedValue: forceAuthn,
+                    required: true,
+                    smallText: "Force the user to authenticate again"
+                }) %>
+
+                <%- include('form/input', { 
+                    id: "relayState", 
+                    label: "RelayState (optional):", 
+                    type: "text", 
+                    placeholder: "Enter RelayState", 
+                    value: relayState, 
+                    required: false,
+                    smallText: "Example: Some state information" 
+                }) %>
+
                 <!-- Auth Context (optional) -->
                 <!-- <label for="authContext">Auth Context (optional):</label>
                 <select id="authContext" name="authContext">
@@ -51,19 +92,6 @@
                     <option value="false">false</option>
                 </select> -->                
 
-                <!-- Force Authn -->
-                <label for="forceAuthn">Force Authn:</label>
-                <select id="forceAuthn" name="forceAuthn">
-                    <option value="true" <%= forceAuthn === 'true' ? 'selected' : '' %>>true</option>
-                    <option value="false" <%= forceAuthn === 'false' ? 'selected' : '' %>>false</option>
-                </select>
-                <small>Force the user to authenticate again</small>
-                
-                <!-- RelayState -->
-                <label for="relayState">RelayState (optional):</label>
-                <input type="text" id="relayState" name="relayState" placeholder="Enter RelayState" value="<% if (relayState) { %><%= relayState %><% } %>">
-                <small>Example: Some state information</small>
-
                 <!-- Binding -->
                 <!-- <label for="binding">Binding:</label>
                 <select id="binding" name="binding">
@@ -71,8 +99,8 @@
                     <option value="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect">HTTP-Redirect</option>
                 </select>
                  -->
-                <!-- Submit Button -->
-                <button type="submit">Generate SAML Request</button>
+
+                 <button type="submit">Generate SAML Request</button>
             </fieldset>      
 
         </form>      
