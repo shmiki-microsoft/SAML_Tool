@@ -33,7 +33,7 @@ async function decodeSamlRequest(samlRequestEncoded) {
     try {
         const buffer = Buffer.from(samlRequestEncoded, 'base64');
         const decoded = await decompressString(buffer);
-        return removeEscapeCharacters(decoded);
+        return removeEscapeCharacters(decoded.toString('utf8'));
     } catch (err) {
         await handleError('decode SAML request', err);
     }
