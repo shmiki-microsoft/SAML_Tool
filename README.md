@@ -64,7 +64,7 @@ openssl req -x509 -days 3650 -nodes -newkey rsa:4096 -keyout ./keys/SP/key-file.
 ### 4. Running the Application
 Please confirm that the current folder and file structure is as follows.
 
-![image](https://github.com/user-attachments/assets/45c284f3-afd4-4ca8-9a93-60b6c559224b)
+![image](https://github.com/user-attachments/assets/eccbe291-db4c-4d0a-b471-11576079f277)
 
 For local deployment, navigate to the `app` directory.
 When running the application for the first time, execute following command:
