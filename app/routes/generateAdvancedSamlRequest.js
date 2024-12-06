@@ -6,7 +6,13 @@ const logger = require('../utils/logger');
 
 router.get('/generateAdvancedSamlRequest', (req, res) => {
     logger.info('GET /generateAdvancedSamlRequest called');
-    res.render('generateAdvancedSamlRequest', { samlRequestXml: null, relayState: null, samlRequestEncodedUrl: null });
+    const currentDateTime = new Date().toISOString();
+    res.render('generateAdvancedSamlRequest', { 
+        samlRequestXml: null, 
+        relayState: null, 
+        samlRequestEncodedUrl: null,
+        currentDateTime: currentDateTime
+    });
 });
 
 router.post('/generateAdvancedSamlRequest', async (req, res) => {
