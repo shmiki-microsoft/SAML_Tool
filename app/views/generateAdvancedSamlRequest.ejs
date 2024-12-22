@@ -14,28 +14,28 @@
                         <%- include('form/checkBox', {
                             id: "includeIssuer",
                             name: "includeIssuer",
-                            label:"includeIssuer",
+                            label:"Issuer",
                             isChecked: includeIssuer ? 'checked' : ''
                         }) %>
                         
                         <%- include('form/checkBox', {
                             id: "includeNameIDPolicy",
                             name: "includeNameIDPolicy",
-                            label:"includeNameIDPolicy",
+                            label:"NameIDPolicy",
                             isChecked: includeNameIDPolicy ? 'checked' : ''
                         }) %>
 
                         <%- include('form/checkBox', {
                             id: "includeAuthnContext",
                             name: "includeAuthnContext",
-                            label:"includeAuthnContext",
+                            label:"AuthnContext",
                             isChecked: includeAuthnContext ? 'checked' : ''
                         }) %>
 
                         <%- include('form/checkBox', {
                             id: "includeForceAuthn",
                             name: "includeForceAuthn",
-                            label:"includeForceAuthn",
+                            label:"ForceAuthn",
                             isChecked: includeForceAuthn ? 'checked' : ''
                         }) %>
 
