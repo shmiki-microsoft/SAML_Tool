@@ -5,6 +5,7 @@ function initializeEnvironmentVariables() {
         assertionConsumerServiceURL: null,
         nameIDFormat: null,
         forceAuthn: null,
+        authnContext:null,
         relayState: null,
         _isGenerate: null,
         _isRequest: null,

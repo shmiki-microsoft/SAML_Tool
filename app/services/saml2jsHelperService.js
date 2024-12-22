@@ -14,6 +14,7 @@ function getSpOptions(req) {
         private_key: fs.readFileSync(path.join(__dirname, `../keys/SP/${process.env.SP_PRIVATE_KEY_FILE}`)).toString(),
         certificate: fs.readFileSync(path.join(__dirname, `../keys/SP/${process.env.SP_CERT_FILE}`)).toString(),
         allow_unencrypted_assertion: true,
+        auth_context: { comparison: "exact", class_refs: [req.body.authnContext] },
     };
 }
 

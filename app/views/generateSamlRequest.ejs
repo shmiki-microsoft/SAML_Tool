@@ -65,6 +65,27 @@
                     smallText: "Force the user to authenticate again"
                 }) %>
 
+                <%- include('form/select', { 
+                    id: "authnContext", 
+                    label: "authnContext:", 
+                    options: [
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:Unspecified", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:Unspecified" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:Password", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:Password" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:X509", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:X509" },
+                        { value: "urn:federation:authentication:windows", text: "urn:federation:authentication:windows" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:Smartcard", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:Smartcard" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:SmartcardPKI", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:SmartcardPKI" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:SPKI", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:SPKI" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:XMLDSig", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:XMLDSig" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:SecureRemotePassword", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:SecureRemotePassword" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:PGP", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:PGP" },
+                        { value: "urn:oasis:names:tc:SAML:2.0:ac:classes:Kerberos", text: "urn:oasis:names:tc:SAML:2.0:ac:classes:Kerberos" },
+                    ],
+                    selectedValue: authnContext,
+                    smallText: "Force the user to authenticate again"
+                }) %>
+
                 <%- include('form/input', { 
                     id: "relayState", 
                     label: "RelayState (optional):", 
@@ -74,32 +95,6 @@
                     required: false,
                     smallText: "Example: Some state information" 
                 }) %>
-
-                <!-- Auth Context (optional) -->
-                <!-- <label for="authContext">Auth Context (optional):</label>
-                <select id="authContext" name="authContext">
-                    <option value="">--Select Auth Context--</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:ac:classes:InternetProtocol">Internet Protocol</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:ac:classes:Password">Password</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:ac:classes:Kerberos">Kerberos</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:ac:classes:X509">X.509</option>
-                </select> -->
-                
-                <!-- Allow Unencrypted Assertion -->
-                <!-- <label for="allowUnencryptedAssertion">Allow Unencrypted Assertion:</label>
-                <select id="allowUnencryptedAssertion" name="allowUnencryptedAssertion">
-                    <option value="true">true</option>
-                    <option value="false">false</option>
-                </select> -->                
-
-                <!-- Binding -->
-                <!-- <label for="binding">Binding:</label>
-                <select id="binding" name="binding">
-                    <option value="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST">HTTP-POST</option>
-                    <option value="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect">HTTP-Redirect</option>
-                </select>
-                 -->
-
                  <button type="submit">Generate SAML Request</button>
             </fieldset>      
 
