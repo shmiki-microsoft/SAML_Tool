@@ -8,44 +8,70 @@
         <form action="/generateAdvancedSamlRequest" method="post">
             <fieldset>
                 <legend>SAML Request Details</legend>
-                
-                <%- include('form/textarea', {
-                    id: "samlRequestXml",
-                    label: "SAML Request XML:",
-                    description: "Please modify the displayed sample as needed.",
-                    placeholder: "Paste your SAML Request XML here",
-                    required: true,
-                    value: samlRequestXml ? samlRequestXml : `
-<?xml version="1.0"?>
-<AuthnRequest 
-    xmlns="urn:oasis:names:tc:SAML:2.0:protocol"
-    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
-    Version="2.0" ID="_14a55139c6d6a8e89640c9e348e64921b16f684608"
-    IssueInstant="${currentDateTime}"
-    Destination="https://idp.example.com/saml2"
-    AssertionConsumerServiceURL="http://sp.example.com/acs"
-    ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-    ForceAuthn="false">
-    <saml:Issuer>sp.example.com</saml:Issuer>
-    <NameIDPolicy Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" AllowCreate="true"/>
-</AuthnRequest>`
-                }) %>
+                <fieldset>
+                    <legend>1st: Select option</legend>
+                    <div class="form-container">
+                        <%- include('form/checkBox', {
+                            id: "includeIssuer",
+                            name: "includeIssuer",
+                            label:"includeIssuer",
+                            isChecked: includeIssuer ? 'checked' : ''
+                        }) %>
+                        
+                        <%- include('form/checkBox', {
+                            id: "includeNameIDPolicy",
+                            name: "includeNameIDPolicy",
+                            label:"includeNameIDPolicy",
+                            isChecked: includeNameIDPolicy ? 'checked' : ''
+                        }) %>
 
-                <%- include('form/input', {
-                    id: "relayState",
-                    label: "RelayState:",
-                    type: "text",
-                    placeholder: "Enter RelayState",
-                    value: relayState ? relayState : '',
-                    required: false,
-                    smallText: "Optional: Provide a RelayState if needed."
-                }) %>
+                        <%- include('form/checkBox', {
+                            id: "includeAuthnContext",
+                            name: "includeAuthnContext",
+                            label:"includeAuthnContext",
+                            isChecked: includeAuthnContext ? 'checked' : ''
+                        }) %>
 
-                <!-- Submit Button -->
-                <button type="submit">Generate SAML Request</button>
+                        <%- include('form/checkBox', {
+                            id: "includeForceAuthn",
+                            name: "includeForceAuthn",
+                            label:"includeForceAuthn",
+                            isChecked: includeForceAuthn ? 'checked' : ''
+                        }) %>
+
+                        <%- include('form/checkBox', {
+                            id: "includeIsPassive",
+                            name: "includeIsPassive",
+                            label:"includeIsPassive",
+                            isChecked: includeIsPassive ? 'checked' : ''
+                        }) %>
+                    </div>
+                </fieldset> 
+                <fieldset>
+                    <legend>2ndst: Edit your SAML Request</legend>
+                    <%- include('form/textarea', {
+                        id: "samlRequestXml",
+                        label: "SAML Request XML:",
+                        description: "Please modify the displayed sample as needed.",
+                        placeholder: "Paste your SAML Request XML here",
+                        required: true,
+                        value: samlRequestXml ? samlRequestXml : ``
+                    }) %>
+                    <%- include('form/input', {
+                        id: "relayState",
+                        label: "RelayState:",
+                        type: "text",
+                        placeholder: "Enter RelayState",
+                        value: relayState ? relayState : '',
+                        required: false,
+                        smallText: "Optional: Provide a RelayState if needed."
+                    }) %>
+                    <button type="submit">Generate SAML Request</button>
+                </fieldset>
+            </fieldset>
             </fieldset>
         </form>
-        
+        <script src="buildSampleSamleRequest.js"></script>
         <% if (samlRequestEncodedUrl) { %>
             <h2>Encoded SAML Request</h2>
             <textarea readonly rows="20" id="encodedSamlRequest" name="encodedSamlRequest"><%= samlRequestEncodedUrl %></textarea>

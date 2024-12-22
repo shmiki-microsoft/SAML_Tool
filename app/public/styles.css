@@ -120,5 +120,25 @@ textarea {
         gap: 0.5rem;
     }
 }
+fieldset {
+    margin-bottom: 8px;
+}
 
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Optional: Adjust the gap between items */
+}
 
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Optional: Adjust the gap between label and checkbox */
+}
+.form-group label {
+    margin-top: 0px;
+    margin-right: 3px;
+}
+.form-group input[type="checkbox"] {
+    margin: 6px 0px 3px 0px; /* Ensure the checkbox height is auto to match the label height */
+}

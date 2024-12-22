@@ -6,6 +6,8 @@ const { base64Decode } = require('../utils/base64Utils');
 const {removeEscapeCharacters, parseXmlString} = require('../utils/xmlUtils');
 const inflateRawAsync = promisify(zlib.inflateRaw);
 const deflateRawAsync = promisify(zlib.deflateRaw);
+const builder = require('xmlbuilder');
+const { v4: uuidv4 } = require('uuid');
 
 async function handleError(operation, error) {
     const errorMessage = `Failed to ${operation}: ${error.message || error}`;
@@ -89,9 +91,49 @@ async function buildSamlRequest(samlRequestXml, relayState) {
     }
 }
 
+async function buildSampleSamlRequest(includeIssuer = 'off', includeNameIDPolicy = 'off', includeAuthnContext = 'off', includeForceAuthn = 'off', includeIsPassive = 'off') {
+    const doc = builder.create('samlp:AuthnRequest', { version: '1.0' })
+        .att('xmlns:samlp', 'urn:oasis:names:tc:SAML:2.0:protocol')
+        .att('xmlns:saml', 'urn:oasis:names:tc:SAML:2.0:assertion')
+        .att('Version', '2.0')
+        .att('ID', `_${uuidv4()}`)
+        .att('IssueInstant', new Date().toISOString())
+        .att('Destination', 'https://idp.example.com/saml2')
+        .att('AssertionConsumerServiceURL', 'http://sp.example.com/acs')
+        .att('ProtocolBinding', 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST');
+
+    addOptionalAttributes(doc, { includeForceAuthn, includeIsPassive, includeIssuer, includeNameIDPolicy, includeAuthnContext });
+
+    const xmlString = doc.end({ pretty: true });
+    return xmlString;
+}
+
+function addOptionalAttributes(doc, options) {
+    if (options.includeForceAuthn === 'on') {
+        doc.att('ForceAuthn', 'false');
+    }
+    if (options.includeIsPassive === 'on') {
+        doc.att('IsPassive', 'false');
+    }
+    if (options.includeIssuer === 'on') {
+        doc.ele('saml:Issuer', {}, 'sp.example.com');
+    }
+    if (options.includeNameIDPolicy === 'on') {
+        doc.ele('samlp:NameIDPolicy', {
+            Format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
+            AllowCreate: 'true'
+        });
+    }
+    if (options.includeAuthnContext === 'on') {
+        doc.ele('samlp:RequestedAuthnContext')
+            .ele('saml:AuthnContextClassRef', {}, 'urn:oasis:names:tc:SAML:2.0:ac:classes:Password');
+    }
+}
+
 module.exports = {
     decodeSamlRequest,
     decodeSamlResponse,
     encodeSamlRequest,
     buildSamlRequest,
+    buildSampleSamlRequest,
 };
