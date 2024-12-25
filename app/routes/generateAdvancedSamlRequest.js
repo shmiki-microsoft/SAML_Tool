@@ -7,24 +7,16 @@ const logger = require('../utils/logger');
 router.get('/generateAdvancedSamlRequest', async (req, res) => {
     
     logger.info('GET /generateAdvancedSamlRequest called');
-    const currentDateTime = new Date().toISOString();
-    const issuer = req.query?.issuer === 'on' ? 'on' : 'off';
-    const nameIDPolicy = req.query?.nameIDPolicy === 'on' ? 'on' : 'off';
-    const authnContext = req.query?.authnContext === 'on' ? 'on' : 'off';
-    const forceAuthn = req.query?.forceAuthn === 'on' ? 'on' : 'off';
-    const isPassive = req.query?.isPassive === 'on' ? 'on' : 'off';
-
-    let xml = await buildSampleSamlRequest(issuer, nameIDPolicy, authnContext,forceAuthn,isPassive);
+    let xml = await buildSampleSamlRequest();
     res.render('generateAdvancedSamlRequest', { 
         samlRequestXml: xml, 
         relayState: null, 
         samlRequestEncodedUrl: null,
-        currentDateTime: currentDateTime,
-        includeIssuer: issuer === 'on',
-        includeNameIDPolicy: nameIDPolicy === 'on',
-        includeAuthnContext: authnContext  === 'on',
-        includeForceAuthn: forceAuthn  === 'on',
-        includeIsPassive: isPassive  === 'on',
+        includeIssuer: null,
+        includeNameIDPolicy: null,
+        includeAuthnContext: null,
+        includeForceAuthn: null,
+        includeIsPassive: null,
     });
 });
 
@@ -53,4 +45,14 @@ router.post('/generateAdvancedSamlRequest', async (req, res) => {
     }
 });
 
+router.post('/generateAdvancedSamlRequest/api/buildSampleSampleRequest', async (req, res) => {
+    logger.info('POST /generateAdvancedSamlRequest/api/buildSampleSampleRequest called');
+    try {
+        const { includeIssuer, includeNameIDPolicy, includeAuthnContext, includeForceAuthn, includeIsPassive } = req.body;
+        const samlXml = await buildSampleSamlRequest(includeIssuer, includeNameIDPolicy, includeAuthnContext, includeForceAuthn, includeIsPassive);
+        return res.json({ samlRequest: samlXml });
+    } catch (err) {
+        handleError(res, err, 500, 'Failed to build sample SAML request');
+    }
+});
 module.exports = router;
