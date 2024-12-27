@@ -17,6 +17,8 @@ router.get('/generateAdvancedSamlRequest', async (req, res) => {
         includeAuthnContext: null,
         includeForceAuthn: null,
         includeIsPassive: null,
+        includeScoping: null,
+        includeSubject: null
     });
 });
 
@@ -24,7 +26,18 @@ router.post('/generateAdvancedSamlRequest', async (req, res) => {
     logger.info('POST /generateAdvancedSamlRequest called');
     logger.debug('Request body:', req.body);
     try {
-        const { samlRequestXml, relayState, includeIssuer,  includeNameIDPolicy, includeAuthnContext, includeForceAuthn, includeIsPassive } = req.body;
+        const {
+            samlRequestXml,
+            relayState,
+            includeIssuer,
+            includeNameIDPolicy,
+            includeAuthnContext,
+            includeForceAuthn,
+            includeIsPassive,
+            includeScoping,
+            includeSubject
+        } = req.body;
+
         if (!samlRequestXml || samlRequestXml.trim() === '') {
             return handleError(res, new Error('SAML Request XML is required'), 400, 'SAML Request XML is required');
         }
@@ -32,14 +45,16 @@ router.post('/generateAdvancedSamlRequest', async (req, res) => {
         let loginUrl = await buildSamlRequest(samlRequestXml,relayState);
         res.render('generateAdvancedSamlRequest', {
             samlRequestEncodedUrl: loginUrl,
-            samlRequestXml: samlRequestXml,
-            relayState: relayState,
-            includeIssuer: includeIssuer,
-            includeNameIDPolicy: includeNameIDPolicy,
-            includeAuthnContext: includeAuthnContext,
-            includeForceAuthn: includeForceAuthn,
-            includeIsPassive: includeIsPassive
-        });
+            samlRequestXml,
+            relayState,
+            includeIssuer,
+            includeNameIDPolicy,
+            includeAuthnContext,
+            includeForceAuthn,
+            includeIsPassive,
+            includeScoping,
+            includeSubject
+        });      
     } catch (err) {
         handleError(res, err, 500, 'Failed to process SAML request');
     }
@@ -48,8 +63,25 @@ router.post('/generateAdvancedSamlRequest', async (req, res) => {
 router.post('/generateAdvancedSamlRequest/api/buildSampleSampleRequest', async (req, res) => {
     logger.info('POST /generateAdvancedSamlRequest/api/buildSampleSampleRequest called');
     try {
-        const { includeIssuer, includeNameIDPolicy, includeAuthnContext, includeForceAuthn, includeIsPassive } = req.body;
-        const samlXml = await buildSampleSamlRequest(includeIssuer, includeNameIDPolicy, includeAuthnContext, includeForceAuthn, includeIsPassive);
+        const {
+            includeIssuer,
+            includeNameIDPolicy,
+            includeAuthnContext,
+            includeForceAuthn,
+            includeIsPassive,
+            includeScoping,
+            includeSubject
+        } = req.body;
+
+        const samlXml = await buildSampleSamlRequest(
+            includeIssuer,
+            includeNameIDPolicy,
+            includeAuthnContext,
+            includeForceAuthn,
+            includeIsPassive,
+            includeScoping,
+            includeSubject
+        );
         return res.json({ samlRequest: samlXml });
     } catch (err) {
         handleError(res, err, 500, 'Failed to build sample SAML request');

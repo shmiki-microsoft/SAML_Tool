@@ -45,6 +45,20 @@
                             label:"IsPassive",
                             isChecked: includeIsPassive ? 'checked' : ''
                         }) %>
+                        
+                        <%- include('form/checkBox', {
+                            id: "includeScoping",
+                            name: "includeScoping",
+                            label:"Scoping",
+                            isChecked: includeScoping ? 'checked' : ''
+                        }) %>
+                        
+                        <%- include('form/checkBox', {
+                            id: "includeSubject",
+                            name: "includeSubject",
+                            label:"Subject",
+                            isChecked: includeSubject ? 'checked' : ''
+                        }) %>
                     </div>
                 </fieldset> 
                 <fieldset>

@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const includeAuthnContext = document.getElementById('includeAuthnContext');
     const includeForceAuthn = document.getElementById('includeForceAuthn');
     const includeIsPassive = document.getElementById('includeIsPassive');
+    const includeScoping = document.getElementById('includeScoping');
+    const includeSubject = document.getElementById('includeSubject');
 
     function updateSamlRequest() {
         const issuerFlag = includeIssuer.checked ? 'on' : 'off';
@@ -11,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const authnContextFlag = includeAuthnContext.checked ? 'on' : 'off';
         const forceAuthnFlag = includeForceAuthn.checked ? 'on' : 'off';
         const isPassiveFlag = includeIsPassive.checked ? 'on' : 'off';
+        const scopingFlag = includeScoping.checked ? 'on' : 'off';
+        const subjectFlag = includeSubject.checked ? 'on' : 'off';
 
         fetch('/generateAdvancedSamlRequest/api/buildSampleSampleRequest', {
             method: 'POST',
@@ -20,7 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 includeNameIDPolicy:nameIDPolicyFlag,
                 includeAuthnContext:authnContextFlag,
                 includeForceAuthn:forceAuthnFlag,
-                includeIsPassive:isPassiveFlag
+                includeIsPassive:isPassiveFlag,
+                includeScoping: scopingFlag,
+                includeSubject: subjectFlag
             }),
         })
         .then(response => response.json())
@@ -36,4 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
     includeAuthnContext.addEventListener('change', updateSamlRequest);
     includeForceAuthn.addEventListener('change', updateSamlRequest);
     includeIsPassive.addEventListener('change', updateSamlRequest);
+    includeScoping.addEventListener('change', updateSamlRequest);
+    includeSubject.addEventListener('change', updateSamlRequest);
 });

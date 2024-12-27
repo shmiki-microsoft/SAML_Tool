@@ -91,7 +91,9 @@ async function buildSamlRequest(samlRequestXml, relayState) {
     }
 }
 
-async function buildSampleSamlRequest(includeIssuer = 'off', includeNameIDPolicy = 'off', includeAuthnContext = 'off', includeForceAuthn = 'off', includeIsPassive = 'off') {
+async function buildSampleSamlRequest(includeIssuer = 'off', includeNameIDPolicy = 'off', 
+    includeAuthnContext = 'off', includeForceAuthn = 'off', includeIsPassive = 'off',
+    includeScoping = 'off', includeSubject = 'off') {
     const doc = builder.create('samlp:AuthnRequest', { version: '1.0' })
         .att('xmlns:samlp', 'urn:oasis:names:tc:SAML:2.0:protocol')
         .att('xmlns:saml', 'urn:oasis:names:tc:SAML:2.0:assertion')
@@ -102,7 +104,8 @@ async function buildSampleSamlRequest(includeIssuer = 'off', includeNameIDPolicy
         .att('AssertionConsumerServiceURL', 'http://sp.example.com/acs')
         .att('ProtocolBinding', 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST');
 
-    addOptionalAttributes(doc, { includeForceAuthn, includeIsPassive, includeIssuer, includeNameIDPolicy, includeAuthnContext });
+    addOptionalAttributes(doc, { includeForceAuthn, includeIsPassive, includeIssuer, 
+        includeNameIDPolicy, includeAuthnContext, includeScoping, includeSubject});
 
     const xmlString = doc.end({ pretty: true });
     return xmlString;
@@ -127,6 +130,17 @@ function addOptionalAttributes(doc, options) {
     if (options.includeAuthnContext === 'on') {
         doc.ele('samlp:RequestedAuthnContext')
             .ele('saml:AuthnContextClassRef', {}, 'urn:oasis:names:tc:SAML:2.0:ac:classes:Password');
+    }
+    if (options.includeScoping === 'on') {
+        const scoping = doc.ele('samlp:Scoping', { ProxyCount: '1' });
+        const idpList = scoping.ele('samlp:IDPList');
+        idpList.ele('samlp:IDPEntry', { ProviderID: 'https://idp.example.com/saml2' });
+        scoping.ele('samlp:RequesterID', {}, 'https://proxy.example.com');
+    }
+    if (options.includeSubject === 'on') {
+        const subject = doc.ele('saml:Subject');
+        subject.ele('saml:NameID', { Format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified' }, 'user@example.com');
+        subject.ele('saml:SubjectConfirmation',{ Method: 'urn:oasis:names:tc:SAML:2.0:cm:bearer' })
     }
 }
 
