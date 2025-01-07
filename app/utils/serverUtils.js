@@ -25,12 +25,14 @@ function setupRoutes(app) {
     const generateAdvancedSamlRequest = require(path.join(APP_ROOT, 'routes/generateAdvancedSamlRequest'));
     const acsRouter = require(path.join(APP_ROOT, 'routes/acs'));
     const decodeSamlResponse = require(path.join(APP_ROOT, 'routes/decodeSamlResponse'));
+    const generateSamlLogoutRequest = require(path.join(APP_ROOT, 'routes/generateSamlLogoutRequest'));
 
     app.use('/', indexRouter);
     app.use('/', generateSamlRequest);
     app.use('/', generateAdvancedSamlRequest);
     app.use('/', decodeSamlResponse);
     app.use('/', acsRouter);
+    app.use('/', generateSamlLogoutRequest);
 
     app.use((req, res, next) => {
         res.status(404).render('notFound');

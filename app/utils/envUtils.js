@@ -14,4 +14,13 @@ function initializeEnvironmentVariables() {
     };
 }
 
-module.exports = { initializeEnvironmentVariables };
+function initializeEnvironmentVariables_logout() {
+    return {
+        logoutURL: null,
+        issuer: null,
+        nameID: null,
+        samlLogoutRequest: null,
+        samlLogoutRequestEncodedUrl: null,
+    };
+}
+module.exports = { initializeEnvironmentVariables,initializeEnvironmentVariables_logout };

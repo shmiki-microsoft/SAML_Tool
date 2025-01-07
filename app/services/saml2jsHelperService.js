@@ -21,6 +21,7 @@ function getSpOptions(req) {
 function getIdpOptions(req) {
     return {
         sso_login_url: req.body.destination,
+        sso_logout_url: req.body.logoutURL
     };
 }
 
@@ -54,9 +55,40 @@ async function extractSamlRequestDataFromLoginUrl(loginUrl) {
     const samlRequest = await decodeSamlRequest(samlRequestEncoded);
     return { samlRequest, samlRequestEncodedUrl: loginUrl };
 }
+
+async function createLogoutRequestUrl(req) {
+    const spOptions = getSpOptions(req);
+    const idpOptions = getIdpOptions(req);
+    const sp = new saml2.ServiceProvider(spOptions);
+    const idp = new saml2.IdentityProvider(idpOptions);
+
+    return new Promise((resolve, reject) => {
+        sp.create_logout_request_url(idp, { name_id: req.body.nameID }, (err, logoutUrl) => {
+            if (err) {
+                logger.error('Error creating logout request URL:', err);
+                return reject(err);
+            }
+            resolve(logoutUrl);
+        });
+    });
+}
+
+async function extractSamlLogoutRequestDataFromLoginUrl(logoutUrl) {
+    const urlParts = new URL(logoutUrl);
+    const samlLogoutRequestEncoded = querystring.parse(urlParts.search.slice(1)).SAMLRequest;
+
+    if (!samlLogoutRequestEncoded) {
+        throw new Error('SAMLRequest parameter is missing in the URL');
+    }
+
+    const samlLogoutRequest = await decodeSamlRequest(samlLogoutRequestEncoded);
+    return { samlLogoutRequest, samlLogoutRequestEncodedUrl: logoutUrl };
+}
 module.exports = {
     getSpOptions,
     getIdpOptions,
     createLoginRequestUrl,
-    extractSamlRequestDataFromLoginUrl
+    extractSamlRequestDataFromLoginUrl,
+    createLogoutRequestUrl,
+    extractSamlLogoutRequestDataFromLoginUrl
 };

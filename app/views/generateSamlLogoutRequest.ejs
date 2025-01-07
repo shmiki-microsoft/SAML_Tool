@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('common/head') %>
+<body>
+    <%- include("common/navbar") %>
+    <div class="container">
+        <h1>Generate SAML Logout Request</h1>
+        <form action="/generateSamlLogoutRequest" method="POST">
+            <fieldset>
+                <legend>SAML Logout Request Details</legend>
+                <%- include('form/input', { 
+                    id: "logoutURL", 
+                    label: "Logout URL:", 
+                    type: "text", 
+                    placeholder: "Enter the Logout URL", 
+                    value: logoutURL, 
+                    required: true, 
+                    smallText: "Example: https://idp.example.com/logout" 
+                }) %>
+            
+                <%- include('form/input', { 
+                    id: "issuer", 
+                    label: "Issuer (EntityID):", 
+                    type: "text", 
+                    placeholder: "Enter the Issuer (EntityID)", 
+                    value: issuer, 
+                    required: true, 
+                    smallText: "Example: sp.example.com" 
+                }) %>
+                <%- include('form/input', { 
+                    id: "nameID", 
+                    label: "NameID:", 
+                    type: "text", 
+                    placeholder: "Enter the NameID", 
+                    value: nameID, 
+                    required: true,
+                    smallText: "Example: user@example.com" 
+                }) %>
+                <button type="submit">Generate SAML Logout Request</button>
+            </fieldset>
+        </form>
+
+        <% if (samlLogoutRequest) { %>
+        <h2>Generated SAML Logout Request</h2>
+        <textarea readonly rows="20"><%= samlLogoutRequest %></textarea>
+        <button type="button" id="sendLogoutRequestButton" data-logout-url="<%= samlLogoutRequestEncodedUrl %>">
+            Send SAML Logout Request
+        </button>
+        <% } %>
+    </div>
+    <script src="sendSamlLogoutRequest.js"></script>
+</body>
+</html>
