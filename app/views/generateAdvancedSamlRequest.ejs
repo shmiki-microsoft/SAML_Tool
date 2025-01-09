@@ -80,12 +80,41 @@
                         required: false,
                         smallText: "Optional: Provide a RelayState if needed."
                     }) %>
+                    <label>Query String Parameters:</label>
+                        <table id="queryStringTable">
+                            <thead>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Value</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (!queryStringKeys || queryStringKeys.length === 0) { %>
+                                    <tr>
+                                        <td><input type="text" name="queryStringKeys" placeholder="Key"></td>
+                                        <td><input type="text" name="queryStringValues" placeholder="Value"></td>
+                                        <td><div class="removeRowButton"></div></td>
+                                    </tr>
+                                <% } else { %>
+                                    <% for (var i = 0; i < queryStringKeys.length; i++) { %>
+                                    <tr>
+                                        <td><input type="text" name="queryStringKeys" value="<%= queryStringKeys[i] %>" placeholder="Key"></td>
+                                        <td><input type="text" name="queryStringValues" value="<%= queryStringValues[i] %>" placeholder="Value"></td>
+                                        <td><div class="removeRowButton"></div></td>
+                                    </tr>
+                                    <% } %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <div id="addRowButton" class="addRowButton"></div><br/>
+                        <small>Optional: Provide Query String Parameters if needed.</small>
                     <button type="submit">Generate SAML Request</button>
                 </fieldset>
             </fieldset>
             </fieldset>
         </form>
-        <script src="buildSampleSamlRequest.js"></script> -
+        <script src="buildSampleSamlRequest.js"></script>
         <% if (samlRequestEncodedUrl) { %>
             <h2>Encoded SAML Request</h2>
             <textarea readonly rows="20" id="encodedSamlRequest" name="encodedSamlRequest"><%= samlRequestEncodedUrl %></textarea>

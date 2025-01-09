@@ -59,7 +59,7 @@ async function encodeSamlRequest(samlRequestXml) {
     }
 }
 
-async function buildSamlRequest(samlRequestXml, relayState) {
+async function buildSamlRequest(samlRequestXml, relayState, queryStringKeys, queryStringValues) {
     try {
         logger.info('Parsing SAML request XML');
         const result = await parseXmlString(samlRequestXml);
@@ -80,6 +80,14 @@ async function buildSamlRequest(samlRequestXml, relayState) {
         let loginUrl = `${destination}?SAMLRequest=${encodeURIComponent(encoded)}`;
         if (relayState && relayState.trim() !== '') {
             loginUrl += `&RelayState=${encodeURIComponent(relayState)}`;
+        }
+
+        if (Array.isArray(queryStringKeys) && Array.isArray(queryStringValues)) {
+            for (let i = 0; i < queryStringKeys.length; i++) {
+                if (queryStringKeys[i] && queryStringKeys[i].trim() !== '' && queryStringValues[i] && queryStringValues[i].trim() !== '') {
+                    loginUrl += `&${encodeURIComponent(queryStringKeys[i])}=${encodeURIComponent(queryStringValues[i])}`;
+                }
+            }
         }
 
         logger.info('SAML request built successfully');

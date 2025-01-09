@@ -45,3 +45,18 @@ document.addEventListener('DOMContentLoaded', function() {
     includeScoping.addEventListener('change', updateSamlRequest);
     includeSubject.addEventListener('change', updateSamlRequest);
 });
+
+document.getElementById('addRowButton').addEventListener('click', function() {
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td><input type="text" name="queryStringKeys" placeholder="Key"></td>
+        <td><input type="text" name="queryStringValues" placeholder="Value"></td>
+        <td><div class="removeRowButton"></div></td>
+    `;
+    document.querySelector('#queryStringTable tbody').appendChild(newRow);
+});
+document.querySelector('#queryStringTable').addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('removeRowButton')) {
+        e.target.closest('tr').remove();
+    }
+});

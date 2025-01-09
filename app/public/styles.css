@@ -135,10 +135,70 @@ fieldset {
     align-items: center;
     gap: 2px; /* Optional: Adjust the gap between label and checkbox */
 }
+
 .form-group label {
     margin-top: 0px;
     margin-right: 3px;
 }
+
 .form-group input[type="checkbox"] {
     margin: 6px 0px 3px 0px; /* Ensure the checkbox height is auto to match the label height */
 }
+
+.removeRowButton {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+}
+
+.removeRowButton::before,
+.removeRowButton::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #000;
+    transform-origin: center;
+}
+
+.removeRowButton::before {
+    transform: rotate(45deg);
+}
+
+.removeRowButton::after {
+    transform: rotate(-45deg);
+}
+
+.addRowButton {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  .addRowButton::before,
+  .addRowButton::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #000;
+    transform-origin: center;
+  }
+  
+  .addRowButton::before {
+    transform: translateY(-50%);
+  }
+  
+  .addRowButton::after {
+    transform: translateY(-50%) rotate(90deg);
+  }
