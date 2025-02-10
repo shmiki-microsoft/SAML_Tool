@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             const samlRequestUrl = sendRequestButton.getAttribute('data-login-url');
             if (samlRequestUrl) {
-                window.location.href = samlRequestUrl;
+                window.open(samlRequestUrl, '_blank');
             }
         });
     }

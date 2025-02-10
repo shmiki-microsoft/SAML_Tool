@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             const samlLogoutRequestUrl = sendRequestButton.getAttribute('data-logout-url');
             if (samlLogoutRequestUrl) {
-                window.location.href = samlLogoutRequestUrl;
+                window.open(samlLogoutRequestUrl, '_blank');
             }
         });
     }
