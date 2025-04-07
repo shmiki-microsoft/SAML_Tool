@@ -13,23 +13,16 @@ router.get('/generateSamlRequest', (req, res) => {
     res.render('generateSamlRequest', envVars);
 });
 
-router.post('/generateSamlRequest', async (req, res) => {
-    logger.info('POST /generateSamlRequest called');
+router.post('/generateSamlRequest/api/sendRequest', async (req, res) => {
+    logger.info('POST /generateSamlRequest/api/sendRequestcalled');
     logger.debug('Request body:', req.body);
 
     try {
         const loginUrl = await createLoginRequestUrl(req);
-        const { samlRequest, samlRequestEncodedUrl } = await extractSamlRequestDataFromLoginUrl(loginUrl);
-
-        logger.info('SAML request decoded successfully');
-        logger.debug('Decoded SAML request:', samlRequest);
-
-        const options = { ...req.body, samlRequest, samlRequestEncodedUrl };
-        res.render('generateSamlRequest', options);
+        return res.json({ loginUrl });
     } catch (err) {
         const statusCode = err.message.includes('SAMLRequest parameter is missing') ? 400 : 500;
         handleError(res, err, statusCode, 'Failed to process SAML Request');
     }
 });
-
 module.exports = router;
