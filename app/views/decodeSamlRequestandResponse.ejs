@@ -4,6 +4,28 @@
 <body>
     <%- include('common/navbar') %>
     <div class="container">
+        <h1>Decode SAML Request</h1>
+        <form action="/decodeSamlRequest" method="post">
+            <fieldset>
+                <legend>SAML Request Details</legend>
+                <%- include('form/textarea', {
+                    id: "samlRequest",
+                    label: "SAML Request (Base64 encoded):",
+                    description: "Please input the Base64 encoded SAML Request.",
+                    placeholder: "Please input the Base64 encoded SAML Request.",
+                    required: true,
+                    value: samlRequest ? samlRequest : ''
+                }) %>
+                <!-- Submit Button -->
+                <button type="submit">Decode</button>
+            </fieldset>
+        </form>
+        
+        <% if (decodedRequest) { %>
+            <h2>Decoded SAML Response</h2>
+            <textarea readonly rows="20"><%= decodedRequest %></textarea>
+        <% } %>
+
         <h1>Decode SAML Response</h1>
         <form action="/decodeSamlResponse" method="post">
             <fieldset>
@@ -26,5 +48,6 @@
             <textarea readonly rows="20"><%= decodedResponse %></textarea>
         <% } %>
     </div>
+
 </body>
 </html>
