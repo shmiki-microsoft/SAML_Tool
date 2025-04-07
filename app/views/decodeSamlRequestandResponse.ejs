@@ -10,9 +10,9 @@
                 <legend>SAML Request Details</legend>
                 <%- include('form/textarea', {
                     id: "samlRequest",
-                    label: "SAML Request (Base64 encoded):",
-                    description: "Please input the Base64 encoded SAML Request.",
-                    placeholder: "Please input the Base64 encoded SAML Request.",
+                    label: "SAML Request (Base64 and ZIP encoded):",
+                    description: "Please input the Base64  and ZIP encoded SAML Request.",
+                    placeholder: "Please input the Base64  and ZIP encoded SAML Request.",
                     required: true,
                     value: samlRequest ? samlRequest : ''
                 }) %>
