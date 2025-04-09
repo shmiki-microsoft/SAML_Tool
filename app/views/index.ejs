@@ -1,1 +1,24 @@
-<%- include('generateSamlRequest') %>
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('common/head') %>
+    <body>
+        <%- include('common/navbar') %>
+        <div class="container">
+            <h2>How to use the SAML Tool</h2>
+            <ol>
+            <li>
+                To integrate this tool into your lab environment, follow the instructions on <a href="<%= WIKI_LINK %>" target="_blank">this Wiki page</a>.
+            </li>
+            <li>
+                To test the SP-initiated flow, click the <a href="/generateSamlRequest">"Generate SAML request" tab</a>.
+            </li>
+            <li>
+                To decode an existing SAML request or response, <a href="/decodeSamlRequestandResponse">click here</a>.
+            </li>
+            <li>
+                To test a logout request, <a href="/generateSamlLogoutRequest">click here</a>.
+            </li>
+            </ol>
+        </div>
+    </body>
+</html>
