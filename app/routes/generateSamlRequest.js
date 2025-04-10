@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { createLoginRequestUrl, extractSamlRequestDataFromLoginUrl } = require('../services/saml2jsHelperService');
+const { createLoginRequestUrl } = require('../services/saml2jsHelperService');
 const handleError = require('../utils/errorHandler');
 const { initializeEnvironmentVariables } = require('../utils/envUtils');
 const logger = require('../utils/logger');

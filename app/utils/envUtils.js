@@ -1,3 +1,5 @@
+const { buildSampleSamlRequest } = require('../services/samlService');
+
 function initializeEnvironmentVariables() {
     return {
         issuer: null,
@@ -14,13 +16,45 @@ function initializeEnvironmentVariables() {
     };
 }
 
-function initializeEnvironmentVariables_logout() {
+async function initializeEnvironmentVariables_AdvancedSamlRequest() {
+    let xml = await buildSampleSamlRequest();
+    return { 
+        samlRequestXml: xml, 
+        relayState: null, 
+        samlRequestEncodedUrl: null,
+        includeIssuer: null,
+        includeNameIDPolicy: null,
+        includeAuthnContext: null,
+        includeForceAuthn: null,
+        includeIsPassive: null,
+        includeScoping: null,
+        includeSubject: null,
+        queryStringKeys:[],
+        queryStringValues:[]
+    };
+}
+
+function initializeEnvironmentVariables_decodeSamlResponse() {
     return {
+        samlResponse:null,
+        decodedResponse:null,
+        samlRequest:null,
+        decodedRequest:null
+    };
+}
+
+function initializeEnvironmentVariables_logout() {
+    return { 
         logoutURL: null,
         issuer: null,
         nameID: null,
         samlLogoutRequest: null,
-        samlLogoutRequestEncodedUrl: null,
+        samlLogoutRequestEncodedUrl: null
     };
 }
-module.exports = { initializeEnvironmentVariables,initializeEnvironmentVariables_logout };
+module.exports = {
+    initializeEnvironmentVariables,
+    initializeEnvironmentVariables_AdvancedSamlRequest,
+    initializeEnvironmentVariables_decodeSamlResponse,
+    initializeEnvironmentVariables_logout
+};

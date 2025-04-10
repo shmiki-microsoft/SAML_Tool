@@ -1,5 +1,4 @@
 const zlib = require('zlib');
-const xml2js = require('xml2js');
 const logger = require('../utils/logger');
 const { promisify } = require('util');
 const { base64Decode } = require('../utils/base64Utils');

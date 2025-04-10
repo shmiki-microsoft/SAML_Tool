@@ -1,27 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const { buildSamlRequest,  buildSampleSamlRequest } = require('../services/samlService');
+const { initializeEnvironmentVariables_AdvancedSamlRequest } = require('../utils/envUtils');
 const handleError = require('../utils/errorHandler'); 
 const logger = require('../utils/logger');
 
 router.get('/generateAdvancedSamlRequest', async (req, res) => {
     
     logger.info('GET /generateAdvancedSamlRequest called');
-    let xml = await buildSampleSamlRequest();
-    res.render('generateAdvancedSamlRequest', { 
-        samlRequestXml: xml, 
-        relayState: null, 
-        samlRequestEncodedUrl: null,
-        includeIssuer: null,
-        includeNameIDPolicy: null,
-        includeAuthnContext: null,
-        includeForceAuthn: null,
-        includeIsPassive: null,
-        includeScoping: null,
-        includeSubject: null,
-        queryStringKeys:[],
-        queryStringValues:[]
-    });
+    const envVars = await initializeEnvironmentVariables_AdvancedSamlRequest();
+    res.render('generateAdvancedSamlRequest', envVars);
 });
 
 router.post('/generateAdvancedSamlRequest', async (req, res) => {
