@@ -33,8 +33,10 @@ router.post('/generateAdvancedSamlRequest', async (req, res) => {
         if (!samlRequestXml || samlRequestXml.trim() === '') {
             return handleError(res, new Error('SAML Request XML is required'), 400, 'SAML Request XML is required');
         }
+        const keysArray = Array.isArray(queryStringKeys) ? queryStringKeys : (queryStringKeys ? [queryStringKeys] : []);
+        const valuesArray = Array.isArray(queryStringValues) ? queryStringValues : (queryStringValues ? [queryStringValues] : []);
 
-        let loginUrl = await buildSamlRequest(samlRequestXml,relayState,queryStringKeys,queryStringValues);
+        let loginUrl = await buildSamlRequest(samlRequestXml, relayState, keysArray, valuesArray);
         res.render('generateAdvancedSamlRequest', {
             samlRequestEncodedUrl: loginUrl,
             samlRequestXml,
@@ -46,8 +48,8 @@ router.post('/generateAdvancedSamlRequest', async (req, res) => {
             includeIsPassive,
             includeScoping,
             includeSubject,
-            queryStringKeys,
-            queryStringValues
+            queryStringKeys:keysArray,
+            queryStringValues:valuesArray
         });      
     } catch (err) {
         handleError(res, err, 500, 'Failed to process SAML request');

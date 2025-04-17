@@ -81,11 +81,9 @@ async function buildSamlRequest(samlRequestXml, relayState, queryStringKeys, que
             loginUrl += `&RelayState=${encodeURIComponent(relayState)}`;
         }
 
-        if (Array.isArray(queryStringKeys) && Array.isArray(queryStringValues)) {
-            for (let i = 0; i < queryStringKeys.length; i++) {
-                if (queryStringKeys[i] && queryStringKeys[i].trim() !== '' && queryStringValues[i] && queryStringValues[i].trim() !== '') {
-                    loginUrl += `&${encodeURIComponent(queryStringKeys[i])}=${encodeURIComponent(queryStringValues[i])}`;
-                }
+        for (let i = 0; i < queryStringKeys.length; i++) {
+            if (queryStringKeys[i] && queryStringKeys[i].trim() !== '' && queryStringValues[i] && queryStringValues[i].trim() !== '') {
+                loginUrl += `&${encodeURIComponent(queryStringKeys[i])}=${encodeURIComponent(queryStringValues[i])}`;
             }
         }
 
