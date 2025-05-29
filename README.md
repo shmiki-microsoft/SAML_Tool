@@ -33,35 +33,11 @@ Create a `.env` file in the root of the project with the following content:
 SERVER_PORT=3000
 HOST=http://localhost:3000
 
-# Service Provider (SP) Configuration
-SP_PRIVATE_KEY_FILE=key-file.pem
-SP_CERT_FILE=cert-file.crt
-
-# Identity Provider (IdP) Configuration
-IDP_CERT_FILE=saml2-js.cer
-
 #Logger Config
-LOG_FILE_PATH=../logs
-LOG_FILE_NAME=application.log
-LOG_LEVEL=all
-MAX_LOG_SIZE=100 #byte
-LOG_ROTATE=5
+LOG_LEVEL=all # all, info, err, warn or debug
 ```
 
-### 3. Set Up Keys and Certificates
-
-1. Create a `keys` directory in  `app` directory of the project.
-2. Inside the `keys` directory, create two subdirectories: `SP` and `IdP`.
-3. Store the Service Provider (SP) private key and certificate in the `SP` directory.
-4. Store the Identity Provider (IdP) certificate in the `IdP` directory.
-
-To generate the SP private key and certificate using OpenSSL, run the following command:
-
-```
-openssl req -x509 -days 3650 -nodes -newkey rsa:4096 -keyout ./keys/SP/key-file.pem -out ./keys/SP/cert-file.crt
-```
-
-### 4. Running the Application
+### 3. Running the Application
 Please confirm that the current folder and file structure is as follows.
 
 ![image](https://github.com/user-attachments/assets/eccbe291-db4c-4d0a-b471-11576079f277)
