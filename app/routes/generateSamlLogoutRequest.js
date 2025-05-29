@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { createLogoutRequestUrl, extractSamlLogoutRequestDataFromLoginUrl } = require('../services/saml2jsHelperService');
+const { createLogoutRequestUrl, extractSamlLogoutRequestDataFromLoginUrl } = require('../services/samlService');
 const handleError = require('../utils/errorHandler');
 const { initializeEnvironmentVariables_logout } = require('../utils/envUtils');
 const logger = require('../utils/logger');
@@ -18,7 +18,7 @@ router.post('/generateSamlLogoutRequest', async (req, res) => {
     logger.debug('Request body:', req.body);
 
     try {
-        const logoutUrl = await createLogoutRequestUrl(req);
+        const logoutUrl = await createLogoutRequestUrl(req.body);
         const { samlLogoutRequest, samlLogoutRequestEncodedUrl } = await extractSamlLogoutRequestDataFromLoginUrl(logoutUrl);
 
         logger.info('SAML Logout Request decoded successfully');

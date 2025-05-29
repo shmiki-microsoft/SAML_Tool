@@ -7,6 +7,7 @@ const inflateRawAsync = promisify(zlib.inflateRaw);
 const deflateRawAsync = promisify(zlib.deflateRaw);
 const builder = require('xmlbuilder');
 const { v4: uuidv4 } = require('uuid');
+const querystring = require('querystring');
 
 async function handleError(operation, error) {
     const errorMessage = `Failed to ${operation}: ${error.message || error}`;
@@ -149,10 +150,80 @@ function addOptionalAttributes(doc, options) {
     }
 }
 
+async function createLoginRequestUrl(param) {
+    const { issuer, destination, assertionConsumerServiceURL, 
+        nameIDFormat, forceAuthn, authnContext, relayState} = param;
+        try {
+            let doc = builder.create('samlp:AuthnRequest', { version: '1.0' })
+                .att('xmlns:samlp', 'urn:oasis:names:tc:SAML:2.0:protocol')
+                .att('xmlns:saml', 'urn:oasis:names:tc:SAML:2.0:assertion')
+                .att('Version', '2.0')
+                .att('ID', `_${uuidv4()}`)
+                .att('IssueInstant', new Date().toISOString())
+                .att('Destination', destination)
+                .att('AssertionConsumerServiceURL', assertionConsumerServiceURL||`${process.env.host}/acs`)
+                .att('forceAuthn', forceAuthn)
+                .att('ProtocolBinding', 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST');
+            doc.ele('saml:Issuer', {}, issuer);
+            doc.ele('samlp:NameIDPolicy', {
+                Format: nameIDFormat,
+                AllowCreate: 'true'
+            });
+            doc.ele('samlp:RequestedAuthnContext')
+                .ele('saml:AuthnContextClassRef', {}, authnContext);
+
+            const samlRequestXml = doc.end({ pretty: true });
+            const encoded = await encodeSamlRequest(samlRequestXml);
+            let loginUrl = `${destination}?SAMLRequest=${encodeURIComponent(encoded)}`;
+            if (relayState && relayState.trim() !== '') {
+                loginUrl += `&RelayState=${encodeURIComponent(relayState)}`;
+            }
+            return loginUrl;
+        } catch (err) {
+            await handleError('build SAML request', err);
+        }
+}
+
+async function createLogoutRequestUrl(param) {
+    const { logoutURL, issuer, nameID} = param;
+    try {
+        let doc = builder.create('samlp:LogoutRequest', { version: '1.0' })
+            .att('xmlns:samlp', 'urn:oasis:names:tc:SAML:2.0:protocol')
+            .att('xmlns:saml', 'urn:oasis:names:tc:SAML:2.0:assertion')
+            .att('Version', '2.0')
+            .att('ID', `_${uuidv4()}`)
+            .att('IssueInstant', new Date().toISOString())
+            .att('Destination', logoutURL)
+        doc.ele('saml:Issuer', {}, issuer);
+        doc.ele('saml:NameID', { Format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified' }, nameID);
+
+        const samlLogoutRequestXml = doc.end({ pretty: true });
+        const encoded = await encodeSamlRequest(samlLogoutRequestXml);
+        return `${logoutURL}?SAMLRequest=${encodeURIComponent(encoded)}`;
+    } catch (err) {
+        await handleError('build SAML request', err);
+    }
+}
+
+async function extractSamlLogoutRequestDataFromLoginUrl(logoutUrl) {
+    const urlParts = new URL(logoutUrl);
+    const samlLogoutRequestEncoded = querystring.parse(urlParts.search.slice(1)).SAMLRequest;
+
+    if (!samlLogoutRequestEncoded) {
+        throw new Error('SAMLRequest parameter is missing in the URL');
+    }
+
+    const samlLogoutRequest = await decodeSamlRequest(samlLogoutRequestEncoded);
+    return { samlLogoutRequest, samlLogoutRequestEncodedUrl: logoutUrl };
+}
+
 module.exports = {
     decodeSamlRequest,
     decodeSamlResponse,
     encodeSamlRequest,
     buildSamlRequest,
     buildSampleSamlRequest,
+    createLoginRequestUrl,
+    createLogoutRequestUrl,
+    extractSamlLogoutRequestDataFromLoginUrl
 };

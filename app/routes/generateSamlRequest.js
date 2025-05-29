@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-const { createLoginRequestUrl } = require('../services/saml2jsHelperService');
+const { createLoginRequestUrl } = require('../services/samlService');
 const handleError = require('../utils/errorHandler');
 const { initializeEnvironmentVariables } = require('../utils/envUtils');
 const logger = require('../utils/logger');
@@ -18,7 +17,7 @@ router.post('/generateSamlRequest/api/sendRequest', async (req, res) => {
     logger.debug('Request body:', req.body);
 
     try {
-        const loginUrl = await createLoginRequestUrl(req);
+        const loginUrl = await createLoginRequestUrl(req.body);
         return res.json({ loginUrl });
     } catch (err) {
         const statusCode = err.message.includes('SAMLRequest parameter is missing') ? 400 : 500;
