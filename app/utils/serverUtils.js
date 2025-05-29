@@ -4,6 +4,7 @@ const path = require('path');
 const compression = require('compression');
 const helmet = require('helmet');
 const logger = require('./logger');
+const appInsights = require("applicationinsights");
 const APP_ROOT = path.join(__dirname, "../");
 
 function setupMiddleware(app) {
@@ -50,6 +51,10 @@ function setupErrorHandling() {
     });
 }
 
+function setupApplicationInsights() {
+    appInsights.setup().start();
+}
+
 function startServer(app, port) {
     app.listen(port, () => {
         logger.info(`SAML_Request_Builder listening on port ${port}`);
@@ -62,5 +67,6 @@ module.exports = {
     setupViewEngine,
     setupRoutes,
     setupErrorHandling,
+    setupApplicationInsights,
     startServer
 };
