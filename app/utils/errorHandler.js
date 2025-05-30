@@ -5,4 +5,12 @@ function handleError(res, err, status, message) {
     res.status(status).render('error', { message, error: err });
 }
 
-module.exports = handleError;
+async function handleErrorAsync(operation, error) {
+    const errorMessage = `Failed to ${operation}: ${error.message || error}`;
+    throw new Error(errorMessage);
+}
+
+module.exports ={
+    handleError,
+    handleErrorAsync
+}

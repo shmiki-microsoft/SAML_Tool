@@ -6,20 +6,16 @@ const {removeEscapeCharacters, parseXmlString} = require('../utils/xmlUtils');
 const inflateRawAsync = promisify(zlib.inflateRaw);
 const deflateRawAsync = promisify(zlib.deflateRaw);
 const builder = require('xmlbuilder');
+const { handleErrorAsync } = require('../utils/errorHandler');
 const { v4: uuidv4 } = require('uuid');
 const querystring = require('querystring');
-
-async function handleError(operation, error) {
-    const errorMessage = `Failed to ${operation}: ${error.message || error}`;
-    throw new Error(errorMessage);
-}
 
 async function processString(string, operation) {
     try {
         const processed = await operation(string);
         return processed
     } catch (err) {
-        await handleError('process string', err);
+        await handleErrorAsync('process string', err);
     }
 }
 
@@ -37,7 +33,7 @@ async function decodeSamlRequest(samlRequestEncoded) {
         const decoded = await decompressString(buffer);
         return removeEscapeCharacters(decoded.toString('utf8'));
     } catch (err) {
-        await handleError('decode SAML request', err);
+        await handleErrorAsync('decode SAML request', err);
     }
 }
 
@@ -46,7 +42,7 @@ function decodeSamlResponse(samlResponse) {
         const decodedResponse = base64Decode(samlResponse);
         return removeEscapeCharacters(decodedResponse);
     } catch (err) {
-        handleError('decode SAML response', err);
+        handleErrorAsync('decode SAML response', err);
     }
 }
 
@@ -55,7 +51,7 @@ async function encodeSamlRequest(samlRequestXml) {
         const compressed = await compressString(samlRequestXml);
         return Buffer.from(compressed, 'utf8').toString('base64');
     } catch (err) {
-        await handleError('encode SAML request', err);
+        await handleErrorAsync('encode SAML request', err);
     }
 }
 
@@ -93,7 +89,7 @@ async function buildSamlRequest(samlRequestXml, relayState, queryStringKeys, que
 
         return loginUrl;
     } catch (err) {
-        await handleError('build SAML request', err);
+        await handleErrorAsync('build SAML request', err);
     }
 }
 
@@ -180,7 +176,7 @@ async function createLoginRequestUrl(param) {
             }
             return loginUrl;
         } catch (err) {
-            await handleError('build SAML request', err);
+            await handleErrorAsync('build SAML request', err);
         }
 }
 
@@ -201,7 +197,7 @@ async function createLogoutRequestUrl(param) {
         const encoded = await encodeSamlRequest(samlLogoutRequestXml);
         return `${logoutURL}?SAMLRequest=${encodeURIComponent(encoded)}`;
     } catch (err) {
-        await handleError('build SAML request', err);
+        await handleErrorAsync('build SAML request', err);
     }
 }
 

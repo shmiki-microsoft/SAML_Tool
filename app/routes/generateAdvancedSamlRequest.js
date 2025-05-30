@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { buildSamlRequest,  buildSampleSamlRequest } = require('../services/samlService');
 const { initializeEnvironmentVariables_AdvancedSamlRequest } = require('../utils/envUtils');
-const handleError = require('../utils/errorHandler'); 
+const {handleError} = require('../utils/errorHandler'); 
 const logger = require('../utils/logger');
 
 router.get('/generateAdvancedSamlRequest', async (req, res) => {

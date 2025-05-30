@@ -41,7 +41,12 @@ function setupRoutes(app) {
     });
 }
 
-function setupErrorHandling() {
+function setupErrorHandling(app) {
+    app.use((err, req, res, next) => {
+        logger.error('Express Error:', err);
+        res.status(500).render('error', { message: 'Internal Server Error', error: err });
+    });
+
     process.on('uncaughtException', function(err) {
         logger.error('Uncaught Exception:', err);
     });

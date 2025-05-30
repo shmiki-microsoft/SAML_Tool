@@ -9,7 +9,7 @@ function initApp() {
     setupMiddleware(app);
     setupViewEngine(app);
     setupRoutes(app);
-    setupErrorHandling();
+    setupErrorHandling(app);
     setupApplicationInsights();
     startServer(app, port);
 }
