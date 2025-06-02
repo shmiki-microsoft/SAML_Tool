@@ -96,16 +96,9 @@
                     smallText: "Example: Some state information" 
                 }) %>
                  <button type="submit">Generate SAML Request</button>
+                <input type="checkbox" id="openInNewTab" name="openInNewTab">open in new tab
             </fieldset>      
-
-        </form>      
-        <% if (samlRequest) { %>
-        <h2>Generated SAML Request</h2>
-        <textarea readonly rows="20" placeholder="Generated SAML Request"><%= samlRequest %></textarea>
-        <h2>RelayState</h2>
-        <input type="text" id="relayState" name="relayState" readonly value="<% if (issuer) { %><%= relayState %><% } %>">
-        <button type="submit" id="sendRequestButton" data-login-url="<%= samlRequestEncodedUrl %>">Send SAML Request</button>
-        <% } %>
+        </form>
     </div>
     <script src="sendSamlRequest.js"></script>
 </body>
